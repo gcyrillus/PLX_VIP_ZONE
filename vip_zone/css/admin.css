@@ -1,0 +1,34 @@
+.grid-center {
+	display: grid;
+	gap: 0.5em;
+	justify-content: center;
+}
+.gridx2 {
+	display: grid;
+	grid-template-columns: repeat(2,auto);
+	gap: 0.5em;
+}
+.visitorUser form {
+	text-align: center;
+	display: grid;
+	gap: 0.25em;
+}
+.visitorUser textarea {
+	width: 100%;
+	min-height: 15em;
+	background: linear-gradient(
+    to bottom,
+    #dee 0 1.5em,
+    gray 1.5em 1.55em,
+    transparent 1.55em
+  ), repeating-linear-gradient(
+  to bottom, 
+  transparent 0 1.4em, 
+  lightgray   1.5em 
+  );
+  word-spacing: 0.5em;
+  line-height: 1.5em;
+}
+.visitorUser [type="submit"]{
+	margin:auto;
+}
