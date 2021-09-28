@@ -30,7 +30,7 @@ Vous pouvez:
 
 ## résumé et info à propos de l'édition 'Ajout utilisateurs'
 
-   1.  Conservez les entêtes de la première ligne,Login;Name;Password;Email cette ligne n'est pas enregistrée comme Utilisateur mais vous rappelle la syntaxe à respecter.
+   1.  Conservez les entêtes de la première ligne:  `Login;Name;Password;Email` . Cette ligne n'est pas enregistrée comme Utilisateur mais vous rappelle la syntaxe à respecter.
    2.  Il y a quatre champs séparés par un point virgule, ces champs vont créer les utilisateurs avec leur adresse mail et mot de passe respectif .
    3.  Le mot de passe sera crypté à l'enregistrement, si il est perdu par l'utilisateur et selon la configuration native de votre PluXml, son adresse mail si valide pourra lui servir à en créer un nouveau.
    4.  L'enregistrement ne gère pas les doublons, mais ne finalisera pas un traitement en lot si une ligne est incomplète ou comporte une erreur de syntaxe
