@@ -1,8 +1,7 @@
 <?php if(!defined("PLX_ROOT")) exit; 
-	# Control du token du formulaire
-	plxToken::validateFormToken($_POST);
 
-	
+
+$nbUser=0;	
 
 // configuation : fait un backup du fichier users.xml
 	if (!file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml.bak')) {
@@ -21,11 +20,14 @@
 		}
 	}
 	
-  if(!empty($_GET['ploc'])) {	  
-	$fileupdate = fopen(PLX_PLUGINS.$plugin."/username.csv", "w")  ;
-	fwrite($fileupdate, $_POST['csv']);
-	$fileCsv=$_POST['csv'];
-	fclose($fileupdate); 	  
+  if(!empty($_GET['ploc'])) {
+	  
+	if(!empty($_POST['csv'])) {	  
+		$fileupdate = fopen(PLX_PLUGINS.$plugin."/username.csv", "w")  ;
+		fwrite($fileupdate, $_POST['csv']);
+		$fileCsv=$_POST['csv'];
+		fclose($fileupdate); 	
+	}  
 	updateFromCsv(); 
   }
   
@@ -71,59 +73,56 @@ else {
 
   <?php
      $configZone = $plxPlugin->getParam('privatize');
-	 if($configZone =="none")   {$none=" selected ";} else {$none="";}
+	 if($configZone =="none")   {$none=" selected ";}   else {$none="";}
 	 if($configZone =="catart") {$catart=" selected ";} else {$catart="";}
 	 if($configZone =="static") {$static=" selected ";} else {$static="";}
-	 if($configZone =="blog")   {$blog=" selected ";} else {$blog="";} 
-	echo '
+	 if($configZone =="blog")   {$blog=" selected ";}   else {$blog="";} 
+	?>
 	<div  class="grid-center">
 	<div>
-		<header>
-			<h2>';
-			$plxPlugin->lang("L_VIP_ZONE_PRIVATIZED");
-			echo '</h2>
-		</header>
-		<form action="" method="post" class="gridx2">
-			<label>';
-			$plxPlugin->lang("L_VIP_ZONE_SELECTION");
-			echo '</label>
+		<form action="" method="post">
+		<fieldset><legend>
+			<?php $plxPlugin->lang("L_VIP_ZONE_PRIVATIZED"); ?>
+			</legend><div class="gridx2">
+			<label><?php $plxPlugin->lang("L_VIP_ZONE_SELECTION"); ?></label>
 			<select name="privatize">
-				<option value="none" '.$none.'    >';
-				$plxPlugin->lang("L_ZONE_NONE2");
-				echo '</option>
-				<option value="blog" '.$blog.'    >';
-				$plxPlugin->lang("L_ZONE_BLOG");
-				echo '</option>
-				<option value="catart" '.$catart.'>';
-				$plxPlugin->lang("L_ZONE_CAT_ART");
-				echo '</option>
-				<option value="stat" '.$static.  '>';
-				$plxPlugin->lang("L_ZONE_STATIC");
-				echo '</option>
+				<option value="none" <?php  echo $none; ?>     ><?php $plxPlugin->lang("L_ZONE_NONE2");   ?></option>
+				<option value="blog"  <?php  echo $blog; ?>    ><?php $plxPlugin->lang("L_ZONE_BLOG");    ?></option>
+				<option value="catart" <?php  echo $catart; ?> ><?php $plxPlugin->lang("L_ZONE_CAT_ART"); ?></option>
+				<option value="stat"  <?php  echo $static; ?>  ><?php $plxPlugin->lang("L_ZONE_STATIC");  ?></option>
 			</select>
 			<br>
-			'.plxToken::getTokenPostMethod() .'
-			<input value="';
-				$plxPlugin->lang("L_SAVE_VIP_ZONE_SELECTED");
-				echo '"  type="submit">
+			<input value="<?php  $plxPlugin->lang("L_SAVE_VIP_ZONE_SELECTED"); ?>"  type="submit">
+				</div>
+				</fieldset>
 		</form>
 	</div>
 	<div class="visitorUser">
-	<header>
-		<h2>';
-			$plxPlugin->lang("L_BATCH_NEW_VIPS");
-			echo ' </h2>
-	</header>
-	<form action="parametres_plugin.php?p='.$plugin.'&ploc=envoyer" method="post" >
-		<label for="csv"><b>';
-			$plxPlugin->lang("L_SAVE_VIP_PROFILE_FILE");
-			echo ':</b></label>
+		<form enctype="multipart/form-data" action="<?php echo PLX_PLUGINS.$plugin.'/upCSV.php'; ?>" method="post"  >
+			<fieldset>
+				<legend><?php  $plxPlugin->lang("L_BATCH_NEW_VIPS"); ?></legend>
+				<div class="gridx2">
+					<button type="button" name="blobupload" style="margin-top:auto;background:green;color:ivory;" onclick="dl_CSV();" ><?php $plxPlugin->lang("L_DL_101_CSV_FILE") ?></button>
+					<?php if(!empty($_GET['upmsg']) &&  ($_GET['upmsg']=="fail")){ echo '<p class="alert red row1-2col" >'.L_SAVE_FILE_ERROR.' <br> '.L_PLUGINS_REQUIREMENTS.': '.L_FILE_REQUIRED.'  <b>username.csv</b>.</p>'; }  ?>
+					<?php if(!empty($_GET['upmsg']) && ($_GET['upmsg']=="sucess")){ echo '<p class="alert green row1-2col">'.L_SAVE_FILE_SUCCESSFULLY.'</p>'; }  ?>
+					<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+					<input name="userfile" type="file" accept=".csv"  required ><br>
+					<input type="submit" value="<?php $plxPlugin->lang("L_UPLOAD_NEW_CSV_FILE"); ?>" />
+				</div>
+			</fieldset>
+		</form>
+
+	<?php
+	echo '<form action="parametres_plugin.php?p='.$plugin.'&ploc=envoyer" method="post" >
+		<fieldset><legend> ';
+			$plxPlugin->lang("L_SAVE_VIP_PROFILE_FILE_ONLINE");
+			echo ':</legend>
 		<textarea name="csv"  name="csv" >'.  $fileCsv . '</textarea>
 		<br>
-		'.plxToken::getTokenPostMethod() .'
 		<input value="';
 			$plxPlugin->lang("L_UPDATE_NEW_USERS_CSV");
 			echo '" type="submit">
+			</fieldset>
 	</form>
 
 	</div>
@@ -161,7 +160,7 @@ class SimpleXMLExtended extends SimpleXMLElement {
 function updateFromCsv() {
 
 // on verfie que nos fichiers sont accessibles
-if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS."vip_zone/username.csv", "r")) !== FALSE) ) {
+if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS."/vip_zone/username.csv", "r")) !== FALSE) ) {
 	
 
 
@@ -260,3 +259,14 @@ foreach($array as $i => $line){
 
 ?>
 
+				 <script>
+				 function dl_CSV() {
+					let link = document.createElement("a");
+					link.download = "username.csv";
+					let blob = new Blob(["Login;Name;Passsword;Email\n"], {type: "text/csv"});
+					link.href = URL.createObjectURL(blob);
+					link.target="_blank"
+					link.click();
+					URL.revokeObjectURL(link.href);
+					}
+				</script>
