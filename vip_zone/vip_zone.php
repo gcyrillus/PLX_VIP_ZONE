@@ -10,6 +10,7 @@
             'AdminUsersTop',
             'AdminAuthEndHead',
 			'ThemeEndHead',
+			'plxShowStaticListEnd',
         );
         const BEGIN_CODE = '<?php' . PHP_EOL;
         const END_CODE = PHP_EOL . '?>';
@@ -37,8 +38,7 @@
         }
 
         public function OnDeactivate() {
-            # code à exécuter à la désactivation du plugin, desactive les comptes visiteurs
-			
+            # code à exécuter à la désactivation du plugin, desactive les comptes visiteurs			
 			$deactivateVisitors=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."users.xml") or die("Error: Cannot create object");
 			foreach($deactivateVisitors->children() as $users) {
 			  if ( $users['profil'] =='5') {
@@ -56,11 +56,10 @@
 			  $users->attributes()->delete = '0';
 			  }
 			} 
-			$reactivateVisitors->asXml(PLX_ROOT.PLX_CONFIG_PATH."users.xml");			
-			
-			
-			
-        }	
+			$reactivateVisitors->asXml(PLX_ROOT.PLX_CONFIG_PATH."users.xml");				
+        }
+
+		// on renvoi le VIP vers la page privée aprés authentification
         public function AdminTopEndHead() {
             echo self::BEGIN_CODE;
 ?>
@@ -69,6 +68,7 @@
             echo self::END_CODE;
         }
 
+		// on ajoute un profil utilisateur
         public function AdminUsersTop() {
             echo self::BEGIN_CODE;
 ?>
@@ -86,6 +86,7 @@
             echo self::END_CODE;
         } 
 
+		// on stocke la page qui a requis une authentification dans un cookie
         public function AdminAuthEndHead() {
             echo self::BEGIN_CODE;
 ?>
@@ -96,7 +97,7 @@
 		
  
 
-
+		// avant l'affichage de la page, verifie si il y a besoin d'authenfication en comparant la configuration du plugin et le type de page demandée
         public function ThemeEndHead() {	
 		            echo self::BEGIN_CODE;
 ?>
@@ -130,16 +131,17 @@
         }
 
 
-		
-		
-		
-		
-		
-		
+        // ajout d'un bouton de deconnexion dans le menu principal si le visiteur est authentifier .	
+        public function plxShowStaticListEnd() {	
+		            echo self::BEGIN_CODE;
+?>
 
-        	
-		
-		
+		 if (isset($_SESSION['profil'])) { array_push($menus, '<li class="static menu noactive"  id="VIP_logout"><a href="/core/admin/auth.php?d=1" style="border-radius:50%;background:tomato;box-shadow:1px 1px 3px 1px;aspect-ratio:1/1;display:inline-grid;vertical-align:middle;justify-content:center;padding: 0.5em;align-items: center;line-height: 0.6;color: black;font-weight: bold;border:none" title="Logout">X</a></li>');}
+	 
+		 
+<?php
+            echo self::END_CODE;
+        }			
 		
 		 
     }
