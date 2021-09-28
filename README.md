@@ -10,7 +10,8 @@ La seule page de l'administration qui lui sera accessible sera la page authentif
 Comme tout les plugins, dés l'activation il vous faut configurer votre plugin de façon à ce qu'il fonctionne entièrement.
 
 Le plugin à la première configuration va faire un backup de votre fichier utilisateurs (user.xml => user.xml.back) et créer un fichier CSV (username.csv dans le dossier du plugin) avec ses entêtes, celui-ci vous permettra d'ajouter par lot des utilisateur VIP. *Voir plus bas pour le détail* 
-Configuration
+
+## Configuration
 
 Le plugin vous permet de choisir entre plusieurs configuration d'espaces V.I.P., Vous pouvez opter pour rendre privé:
 
@@ -23,7 +24,9 @@ Le plugin vous permet de choisir entre plusieurs configuration d'espaces V.I.P.,
 
 Le traitement par lot s'effectue sur la structure d'un fichier au format CSV, ce type de fichier peut-être ouvert et éditer avec de nombreux éditeurs de texte ou de feuille de calcul. Les 2 programmes plus connus du grand publics sont Excel(MS) et OpenOffice calc.
 
-Vous pouvez, soit télécharger le fichier du plugin et l’éditer dans votre programme favori en ajoutant vos utilisateurs **ligne par ligne** en respectant **les colonnes**   ou directement dans l'éditeur du plugin en respectant la syntaxe.
+Vous pouvez:
+   1.  Télécharger le fichier ***username.csv*** et l’éditer dans votre programme favori en ajoutant vos utilisateurs **ligne par ligne** et en respectant **les colonnes** , puis en le renvoyant sur le serveur. 
+   2.  Directement dans la page *configuration*  du plugin dans l'editeur affiché en respectant la syntaxe des entêtes en premiere ligne ,  **ligne par ligne**  en séparant chaque champs (au nombre de quatre) d'une double virgule  <kbd>**;**</kbd> en faisant la saisie au clavier.
 
 ## résumé et info à propos de l'édition 'Ajout utilisateurs'
 
