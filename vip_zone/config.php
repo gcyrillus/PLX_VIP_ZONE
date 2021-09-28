@@ -161,7 +161,7 @@ class SimpleXMLExtended extends SimpleXMLElement {
 function updateFromCsv() {
 
 // on verfie que nos fichiers sont accessibles
-if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS."visitor/username.csv", "r")) !== FALSE) ) {
+if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS."vip_zone/username.csv", "r")) !== FALSE) ) {
 	
 
 
