@@ -102,7 +102,7 @@
 ?>
 		  # On recupere le mode privatisé
 		  $plxMotor = plxMotor::getInstance();
-		  $plugin = $plxMotor->plxPlugins->aPlugins['visitor'];
+		  $plugin = $plxMotor->plxPlugins->aPlugins['vip_zone'];
 		  $parameter = $plugin->getParam('privatize');
 		 
 		  #Selon le mode privatisé, on redirige vers la page d'authenfication si par encore logué
