@@ -26,7 +26,7 @@ $LANG = array (
 		'L_UPDATE_NEW_USERS_CSV'			=> 'Validez l\'ajout de nouveaux utilisateurs.(MAJ: username.csv)' ,
 		'L_ERROR_BATCH_RECORDS'				=> 'Format enregistrement utilisateur incorrect à la ligne (champ manquant):'	,
 		'L_UPDATE_USERS_SUCCESSFUL'			=> 'Mise à jour des données effectuée avec succès',
-		'L_DL_101_CSV_FILE' 				=> 'telecharger un fichier CSV <i>prêt à éditer</i>'
+		'L_DL_101_CSV_FILE' 				=> 'telecharger le fichier CSV  modéle.'
 		
 );
 ?>		

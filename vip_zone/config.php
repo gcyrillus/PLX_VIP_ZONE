@@ -1,9 +1,7 @@
 <?php if(!defined("PLX_ROOT")) exit; 
 
 
-$nbUser=0;	
-
-// configuation : fait un backup du fichier users.xml
+	// configuation : fait un backup du fichier users.xml
 	if (!file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml.bak')) {
 		$file = PLX_ROOT.PLX_CONFIG_PATH.'users.xml';
         $newfile = PLX_ROOT.PLX_CONFIG_PATH.'users.xml.bak';
@@ -20,9 +18,9 @@ $nbUser=0;
 		}
 	}
 	
-  if(!empty($_GET['ploc'])) {
-	  
-	if(!empty($_POST['csv'])) {	  
+  if(!empty($_GET['ploc'])) {	  
+	if(!empty($_POST['csv'])) {	 
+		//maj du fichier username.csv	
 		$fileupdate = fopen(PLX_PLUGINS.$plugin."/username.csv", "w")  ;
 		fwrite($fileupdate, $_POST['csv']);
 		$fileCsv=$_POST['csv'];
@@ -32,7 +30,7 @@ $nbUser=0;
   }
   
 if(!empty($_POST['privatize'])) {
-
+	//maj configuration zone privatisée
 	
 	if($_POST['privatize'] =="catart") {
 		$vip = "catart";
@@ -54,7 +52,7 @@ if(!empty($_POST['privatize'])) {
     }	
 	
 	
-
+// creation du fichier username.csv si absent
 if  (@($open = fopen(PLX_PLUGINS.$plugin."/username.csv", "r")) !== FALSE) {
 	 $fileCsv = file_get_contents(PLX_PLUGINS.$plugin."/username.csv", true);
 }
@@ -64,10 +62,6 @@ else {
 	fwrite($open, $fileCsv);
 	fclose($open);
 }
-
-
-
-
   ?>
   
 
@@ -117,7 +111,7 @@ else {
 		<fieldset><legend> ';
 			$plxPlugin->lang("L_SAVE_VIP_PROFILE_FILE_ONLINE");
 			echo ':</legend>
-		<textarea name="csv"  name="csv" >'.  $fileCsv . '</textarea>
+		<textarea name="csv"  id="csv" >'.  $fileCsv . '</textarea>
 		<br>
 		<input value="';
 			$plxPlugin->lang("L_UPDATE_NEW_USERS_CSV");
@@ -158,89 +152,88 @@ class SimpleXMLExtended extends SimpleXMLElement {
   } 
 }
 function updateFromCsv() {
+	// on verfie que nos fichiers sont accessibles
+	if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS.'/vip_zone/username.csv', 'r')) !== FALSE) && ($_GET['upmsg']== null)) {
+		
+		// on commence avec le fichier csv  
+		while (($data = fgetcsv($open, 1000, ";")) !== FALSE)     {        
+		  $array[] = $data; 
+		}  
+		fclose($open);
 
-// on verfie que nos fichiers sont accessibles
-if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS."/vip_zone/username.csv", "r")) !== FALSE) ) {
-	
+		// on recupere le fichier XML
+		$xml = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'users.xml', true);
 
+		// on charge le fichier xml
+		$doc = new SimpleXMLExtended($xml); 
+		
+		// on compte ses enregistrements
+		$kids = $doc->children();
+		$nbUser = count($kids);
+		$nbRecords =0;
 
-
-
-	// on commence avec le fichier csv  
-    while (($data = fgetcsv($open, 1000, ";")) !== FALSE)     {        
-      $array[] = $data; 
-    }  
-    fclose($open);
-
-	// on recupere le fichier XML
-    $xml = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'users.xml', true);
-
-    // on charge le fichier xml
-	$doc = new SimpleXMLExtended($xml); 
-    // on compte les enregistrements
-	$kids = $doc->children();
-	$nbUser = count($kids);
-
-
-  // on boucle sur les lignes du fichiers CSV pour récuperer les données et les ajouter aux données existantes 
-
-foreach($array as $i => $line){ 
+		 // on boucle sur les lignes du fichiers CSV pour récuperer les données et les ajouter aux données existantes 
+		foreach($array as $i => $line){ 
 
 
-		if($i >0) { // on passe la premiere ligne ou sont  stockées les entêtes de colonnes.
-				  $nbUser++;
+				if($i >0) { // on passe la premiere ligne ou sont  stockées les entêtes de colonnes.
+					$nbRecords++; // on compte les enregistrements qui sont ajouter.
+					$nbUser++;
+					//test si données extraites
+					if((!isset($line[0])) or (!isset($line[1])) or (!isset($line[2])) or (!isset($line[3]))) {
+					$nbRecords++;
+					echo	'<p class="alert red "> Syntax error to fix on user record line (missing field): <b> '.$nbRecords  .'</b></p>';
+					 
+					$fileError ='1';
 
-			//foreach($line  as $key => $value){
-		 	if((!isset($line[0])) or (!isset($line[1])) or (!isset($line[2])) or (!isset($line[3]))) {
-		    echo	'<p class="alert red "> Syntax error to fix on user record line (missing field): <b> '.$nbUser  .'</b></p>';
-			$nbUser--;
-	        } else {
-			
-	 
-			$element = $doc->addChild('user'); 
-			$element->addAttribute('number', str_pad($nbUser, 3,'0', STR_PAD_LEFT)  );
-			$element->addAttribute('active', '1' );
-			$element->addAttribute('profil', '5' );
-			$element->addAttribute('delete', '0' );	 
-			
-			$login = $element->addChild('login'); 
-			$login->addCData($line[0]); 
+					} 
+					else {
+					
+			 		// on alimente les données visiteur V.I.P..
+					$element = $doc->addChild('user'); 
+					$element->addAttribute('number', str_pad($nbUser, 3,'0', STR_PAD_LEFT)  );
+					$element->addAttribute('active', '1' );
+					$element->addAttribute('profil', '5' );
+					$element->addAttribute('delete', '0' );	 
+					
+					$login = $element->addChild('login'); 
+					$login->addCData($line[0]); 
 
-			$name = $element->addChild('name'); 
-			$name->addCData($line[1]); 
+					$name = $element->addChild('name'); 
+					$name->addCData($line[1]); 
 
-			$infos = $element->addChild('infos'); 
-			$infos->addCData(''); 
+					$infos = $element->addChild('infos'); 
+					$infos->addCData(''); 
 
-	//$salt='';
-	$salt = plxUtils::charAleatoire(10);
-	
-	//$pwd=$line[2];
-	$pwd=sha1($salt.md5($line[2]));			
-			
-			$password = $element->addChild('password'); 
-			$password->addCData($pwd); 
-			
+					// grain de sel
+					$salt = plxUtils::charAleatoire(10);
 
-			$salted = $element->addChild('salt'); 
-			$salted->addCData($salt); 
+					//cryptage du mot de passe
+					$pwd=sha1($salt.md5($line[2]));			
+					
+					$password = $element->addChild('password'); 
+					$password->addCData($pwd); 
+					
 
-			$email = $element->addChild('email'); 
-			$email->addCData($line[3]); 
+					$salted = $element->addChild('salt'); 
+					$salted->addCData($salt); 
 
-			$lang = $element->addChild('lang'); 
-			$lang->addCData('fr'); 
+					$email = $element->addChild('email'); 
+					$email->addCData($line[3]); 
 
-			$password_token = $element->addChild('password_token'); 
-			$password_token->addCData(''); 
+					$lang = $element->addChild('lang'); 
+					$lang->addCData('fr'); 
 
-			$password_token_expiry = $element->addChild('password_token_expiry'); 
-			$password_token_expiry->addCData(''); 
-			}
+					$password_token = $element->addChild('password_token'); 
+					$password_token->addCData(''); 
 
-	   
-	   }  
-	 }
+					$password_token_expiry = $element->addChild('password_token_expiry'); 
+					$password_token_expiry->addCData(''); 	
+					}			   
+			   }  
+		}
+				
+		if (!isset($fileError)) {
 			//On refait l'indentation du fichier  parceque c'est plus joli
 			$xmlDoc = new DOMDocument ();
 			$xmlDoc->preserveWhiteSpace = false;
@@ -248,25 +241,42 @@ foreach($array as $i => $line){
 			$xmlDoc->loadXML ( $doc->asXML() );
 			// on sauvegarde le fichier xml mis à jour.
 			$xmlDoc->save(PLX_ROOT.PLX_CONFIG_PATH.'users.xml');
-			$nbUser = $nbUser -1 ;
-			echo '<p class="alert green ">'.L_SAVE_FILE_SUCCESSFULLY.' - '.L_CONFIG_USERS_NEW.' <b> '.$nbUser  .'</b></p>';
+			echo '<p class="alert green ">'.L_SAVE_FILE_SUCCESSFULLY.' - '.L_CONFIG_USERS_NEW.' <b> '.$nbRecords  .'</b></p>';
+			
+			// on vide le fichier si tout s'est bien déroulé pour le prochain enregistrement.
+			$open = fopen(PLX_PLUGINS."/vip_zone/username.csv", "w") ;
+			$fileCsv="login;name;password;email\n";
+			fwrite($open, $fileCsv);
+			fclose($open);
+		}
 
-}
-	 else {
+	}
+	else {
     exit(L_SAVE_FILE_ERROR.' user.xml / username.csv.');
-}
+	}
 }
 
 ?>
-
-				 <script>
-				 function dl_CSV() {
-					let link = document.createElement("a");
-					link.download = "username.csv";
-					let blob = new Blob(["Login;Name;Passsword;Email\n"], {type: "text/csv"});
-					link.href = URL.createObjectURL(blob);
-					link.target="_blank"
-					link.click();
-					URL.revokeObjectURL(link.href);
-					}
-				</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/codemirror.min.css" integrity="sha512-6sALqOPMrNSc+1p5xOhPwGIzs6kIlST+9oGWlI4Wwcbj1saaX9J3uzO3Vub016dmHV7hM+bMi/rfXLiF5DNIZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/codemirror.min.js" integrity="sha512-Mq3vhmcyngWQdBzrOf0SA5p9O3WePmAFfsewXSy5v3BzreKxO4WNzIYa9MyWTNBWTjERTNrU5dBnqbEKIl/4dA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/mode/meta.min.js" integrity="sha512-/2x+sfL5ERHfoViXm/UncFBzaD54f2bkjEui6w2IheEUafG2gcHJv3gQ4VDIqNr+LuApQwpnsjjrEMXI43nPzg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+//add codemirror to textarea
+var editor = CodeMirror.fromTextArea(document.getElementById('csv'), {
+    lineNumbers: true,
+    mode: 'text/plain',
+    matchBrackets: true,
+});
+</script>
+<!-- upload default username.csv file -->
+ <script>
+ function dl_CSV() {
+	let link = document.createElement("a");
+	link.download = "username.csv";
+	let blob = new Blob(["Login;Name;Passsword;Email\n"], {type: "text/csv"});
+	link.href = URL.createObjectURL(blob);
+	link.target="_blank"
+	link.click();
+	URL.revokeObjectURL(link.href);
+	}
+</script>

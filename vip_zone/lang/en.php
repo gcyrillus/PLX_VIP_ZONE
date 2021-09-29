@@ -26,7 +26,7 @@ $LANG = array (
 		'L_UPDATE_NEW_USERS_CSV'			=> 'Add new user and update csv file'	,
 		'L_UPDATE_USERS_SUCCESSFUL'			=> 'Data Update was succesfully saved',
 		'L_ERROR_BATCH_RECORDS'				=> 'Syntax error to fix on user record line (missing field):',
-		'L_DL_101_CSV_FILE' 				=> 'download <i>ready to edit</i> CSV file'
+		'L_DL_101_CSV_FILE' 				=> 'download empty username.csv file'
 		
 );
 ?>		
