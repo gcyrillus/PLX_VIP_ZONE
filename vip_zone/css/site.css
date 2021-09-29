@@ -1,0 +1,15 @@
+#VIP_logout.static.menu.noactive a {
+	border-radius:50%;
+	background:tomato;
+	box-shadow:1px 1px 3px 1px;
+	aspect-ratio:1/1;
+	display:inline-grid;
+	vertical-align:middle;
+	justify-content:center;
+	padding: 0.5em;
+	align-items: center;
+	line-height: 0.6;
+	color: black;
+	font-weight: bold;
+	border:none
+}
