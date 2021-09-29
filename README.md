@@ -26,7 +26,7 @@ Le traitement par lot s'effectue sur la structure d'un fichier au format CSV, ce
 
 Vous pouvez:
    1.  Télécharger le fichier ***username.csv*** et l’éditer dans votre programme favori en ajoutant vos utilisateurs **ligne par ligne** et en respectant **les colonnes** , puis en le renvoyant sur le serveur. 
-   2.  Directement dans la page *configuration*  du plugin dans l'editeur affiché en respectant la syntaxe des entêtes en premiere ligne ,  **ligne par ligne**  en séparant chaque champs (au nombre de quatre) d'une double virgule  <kbd>**;**</kbd> en faisant la saisie au clavier.
+   2.  Directement dans la page *configuration*  du plugin dans l'editeur affiché en respectant la syntaxe des entêtes en premiere ligne ,  **ligne par ligne**  en séparant chaque champs (au nombre de quatre) d'une double virgule  <kbd>**;**</kbd> en faisant la saisie au clavier. <sup><sub>(l'editeur embarque https://github.com/codemirror pour rendre l'édition en ligne plus confortable)</sup></sup>
 
 ## résumé et info à propos de l'édition 'Ajout utilisateurs'
 
@@ -37,4 +37,5 @@ Vous pouvez:
    5.  Lorsque vous désactiver le Plugin, tous vos utilisateurs V.I.P., n'ayant plus d’accès privé réservé, voient leur compte désactivé afin de ne plus apparaitre dans la partie 'Comptes Utilisateurs' de l'administration.
    6.  Lorsque vous activer le Plugin, tous les comptes V.I.P. déjà enregistrés seront réactiver
    7.  Pour effacer ou modifier un Utilisateur, cela se passe par la page 'Comptes Utilisateurs' de l'administration.
+   8.  Un lien de déconnexion marqué d'un <kbd>X</kbd> est ajouté au menu principal lorsque vous êtes authentifié.
 
