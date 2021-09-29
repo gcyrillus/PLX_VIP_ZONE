@@ -68,10 +68,15 @@
             echo self::END_CODE;
         }
 
-		// on ajoute un profil utilisateur
+	// on ajoute un profil utilisateur
         public function AdminUsersTop() {
             echo self::BEGIN_CODE;
 ?>
+		//recuperation lang du plugin
+		$plxMotor = plxMotor::getInstance();
+		$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone'];
+		$VIP_Profil = $plugin->getLang('L_PROFIL_VISITOR');
+			
             # Tableau des profils
             $aProfils = array(
                 PROFIL_ADMIN => L_PROFIL_ADMIN,
