@@ -84,7 +84,7 @@
                 PROFIL_MODERATOR => L_PROFIL_MODERATOR,
                 PROFIL_EDITOR => L_PROFIL_EDITOR,
                 PROFIL_WRITER => L_PROFIL_WRITER,
-                PROFIL_VISITOR => L_PLUGINS_REQUIREMENTS_NONE  // affiche aucun en fr à partir des fichiers lang de PluXml
+                PROFIL_VISITOR => $VIP_Profil
             );
 
 <?php
