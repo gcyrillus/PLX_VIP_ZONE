@@ -35,7 +35,7 @@ Vous pouvez:
    3.  Le mot de passe sera crypté à l'enregistrement, si il est perdu par l'utilisateur et selon la configuration native de votre PluXml, son adresse mail si valide pourra lui servir à en créer un nouveau.
    4.  L'enregistrement ne gère pas les doublons, mais ne finalisera pas un traitement en lot si une ligne est incomplète ou comporte une erreur de syntaxe
    5.  Lorsque vous désactiver le Plugin, tous vos utilisateurs V.I.P., n'ayant plus d’accès privé réservé, voient leur compte désactivé afin de ne plus apparaitre dans la partie 'Comptes Utilisateurs' de l'administration.
-   6.  Lorsque vous activer le Plugin, tous les comptes V.I.P. déjà enregistrés seront réactiver
+   6.  Lorsque vous activer le Plugin, tous les comptes V.I.P. déjà enregistrés seront réactivés.
    7.  Pour effacer ou modifier un Utilisateur, cela se passe par la page 'Comptes Utilisateurs' de l'administration.
    8.  Un lien de déconnexion marqué d'un <kbd>X</kbd> est ajouté au menu principal lorsque vous êtes authentifié.
 
