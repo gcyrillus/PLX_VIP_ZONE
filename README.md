@@ -42,3 +42,7 @@ Vous pouvez:
    7.  Pour effacer ou modifier un Utilisateur, cela se passe par la page 'Comptes Utilisateurs' de l'administration.
    8.  Un lien de déconnexion marqué d'un <kbd>X</kbd> est ajouté au menu principal lorsque vous êtes authentifié.
 
+
+___
+Un fichier `username.csv` de 509 utilisateurs fictifs est inclus dans le dossier `vip_zone/test-CSV_file` du plugin pour vos tests.
+___
