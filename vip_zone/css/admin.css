@@ -43,3 +43,11 @@ form {
  background:#f7f7f7;
  font-weight:bold;
 }
+
+/* couleur dans admin plugin pour plugin en scope null (admin+site)*/
+
+#form_plugins span[data-scope=""],
+#plugins-table tbody tr[data-scope=""] td.wrap strong:first-of-type {
+	background :linear-gradient(45deg, #43b0f9 50%, lightgreen 50% );
+	color: #fff;
+}
