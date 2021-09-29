@@ -133,15 +133,11 @@
 
         // ajout d'un bouton de deconnexion dans le menu principal si le visiteur est authentifier .	
         public function plxShowStaticListEnd() {	
-		            echo self::BEGIN_CODE;
+	    echo self::BEGIN_CODE;
 ?>
-
-		 if (isset($_SESSION['profil'])) { array_push($menus, '<li class="static menu noactive"  id="VIP_logout"><a href="/core/admin/auth.php?d=1" style="border-radius:50%;background:tomato;box-shadow:1px 1px 3px 1px;aspect-ratio:1/1;display:inline-grid;vertical-align:middle;justify-content:center;padding: 0.5em;align-items: center;line-height: 0.6;color: black;font-weight: bold;border:none" title="Logout">X</a></li>');}
-	 
+		if (isset($_SESSION['profil'])) { array_push($menus, '<li class="static menu noactive"  id="VIP_logout"><a href="/core/admin/auth.php?d=1"  title="exit">X</a></li>');}
 		 
 <?php
             echo self::END_CODE;
-        }			
-		
-		 
+        } 
     }
