@@ -1,4 +1,4 @@
-# PLX_VIP_ZONE (latest https://github.com/gcyrillus/PLX_VIP_ZONE/tree/v1.05 )
+# PLX_VIP_ZONE <sub><sup>(latest https://github.com/gcyrillus/PLX_VIP_ZONE/tree/v1.05 )</sup></sub>
 Plugin pour PluXml , ajoute la gestion d'espace privé ,blog,catégories ét articles ou pages statiques aux choix, inspiré du précédent squelette: https://github.com/gcyrillus/plx-log-visitor
 
 **Le plugin "Espace Privée" permet de rendre tout ou partie de votre site accessible uniquement à des utilisateurs bénéficiant d'un accès V.I.P..**
