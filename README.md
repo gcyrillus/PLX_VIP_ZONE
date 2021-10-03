@@ -1,5 +1,5 @@
 # PLX_VIP_ZONE
-Plugin pour PluXml , ajoute la gestion d'espace privé ,blog,categories ét articles ou pages statiques aux choix, inspiré du précedent squelette: https://github.com/gcyrillus/plx-log-visitor
+Plugin pour PluXml , ajoute la gestion d'espace privé ,blog,catégories ét articles ou pages statiques aux choix, inspiré du précédent squelette: https://github.com/gcyrillus/plx-log-visitor
 
 **Le plugin "Espace Privée" permet de rendre tout ou partie de votre site accessible uniquement à des utilisateurs bénéficiant d'un accès V.I.P..**
 
@@ -27,9 +27,9 @@ Le traitement par lot s'effectue sur la structure d'un fichier au format CSV, ce
 Vous pouvez:
    1.  Télécharger le fichier ***username.csv*** et l’éditer dans votre programme favori en ajoutant vos utilisateurs **ligne par ligne** et en respectant **les colonnes** , puis en le renvoyant sur le serveur. <up>Un lien de téléchargement est affiché dans la page de configuration.</sup>
    2.  Renvoyer sur le serveur le fichier modifié , il sera traité automatiquement puis vidé.
-   3.  Directement dans la page *configuration*  du plugin dans l'editeur affiché en respectant la syntaxe des entêtes en premiere ligne ,  **ligne par ligne**  en séparant chaque champs (au nombre de quatre) d'une double virgule  <kbd>**;**</kbd> en faisant la saisie au clavier. <sup><sub>(l'editeur embarque https://github.com/codemirror pour rendre l'édition en ligne plus confortable)</sup></sup>
+   3.  Directement dans la page *configuration*  du plugin dans l'editeur affiché en respectant la syntaxe des entêtes en première ligne ,  **ligne par ligne**  en séparant chaque champs (au nombre de quatre) d'une double virgule  <kbd>**;**</kbd> en faisant la saisie au clavier. <sup><sub>(l'editeur embarque https://github.com/codemirror pour rendre l'édition en ligne plus confortable)</sup></sup>
 
-  **Note** . Le plugin ne verifie pas les doublons ni la validité des adresses mails.
+  **Note** . Le plugin ne vérifie pas les doublons ni la validité des adresses mails.
 
 ## résumé et info à propos de l'édition 'Ajout utilisateurs'
 
@@ -40,7 +40,15 @@ Vous pouvez:
    5.  Lorsque vous désactiver le Plugin, tous vos utilisateurs V.I.P., n'ayant plus d’accès privé réservé, voient leur compte désactivé afin de ne plus apparaitre dans la partie 'Comptes Utilisateurs' de l'administration.
    6.  Lorsque vous activer le Plugin, tous les comptes V.I.P. déjà enregistrés seront réactivés.
    7.  Pour effacer ou modifier un Utilisateur, cela se passe par la page 'Comptes Utilisateurs' de l'administration.
-   8.  Un lien de déconnexion marqué d'un <kbd>X</kbd> est ajouté au menu principal lorsque vous êtes authentifié.
+   8.  Un lien de déconnexion est ajouté au menu principal lorsque vous êtes authentifié, gestion des langues possibles: dispo: **fr** et **en** .
+   9.  le titre du formulaire de connexion est personnalisé.
+   10.  Un VIP qui se déconnecte est renvoyé sur la page d'accueil
+   11.  Vérifie la compatibilité de la configuration du mode privée avec la configuration de PluXml (blog ou pas blog ? )
+   12.  ajout d’icônes devient les contenus privatisés si non connecté. (fontawesome 5).
+   13.  cache le contenu des articles et des commentaires si non connecté
+   14.  **ajout de page statique privatisée dans un groupe (VIP). <br>Pour utiliser ces pages , il faut les éditer dans la page d'administration "pages statiques" et les activer pour les finaliser et les afficher sur le site**
+   15.  **A la désactivation du plugin , les pages statiques privées du groupe <b>VIP</b>  sont aussi désactivées**
+   16.  **A l'activation du plugin, si des pages statiques privatisées dans le groupe <b>VIP</b> existent elles sont réactivées.**
 
 
 ___
