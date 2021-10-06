@@ -1,0 +1,68 @@
+/* #VIP_ZONE  style site.css*/
+
+/* lien de deconnexion */
+#vip_logout.static.menu.noactive a {
+ border-radius:4px;
+ background:gold;
+ box-shadow:1px 1px 2px grey;
+}
+
+/* liens VIP */
+#top[class*="vip-mode-"]  
+
+.vip-mode-static .menu .vip-zone a:before,
+.vip-mode-catart article.article header h2 a:before,
+.vip-mode-catart article.article .more a:before,
+.vip-mode-catart article.article ~ span a[title~="Fil"]:before,
+.vip-mode-catart aside .arch-list a:before,
+.vip-mode-blog aside .arch-list a:before,
+.vip-mode-catart aside .lastcom-list a:before,
+.vip-mode-blog aside.lastcom-list a:before,
+.vip-mode-catart aside .cat-list a:before,
+.vip-mode-blog aside .cat-list a:before,
+.vip-mode-blog aside .lastart-list a:before,
+.vip-mode-catart aside .lastart-list a:before,
+.vip-mode-blog li#static-blog a:before ,
+.vip-mode-catart li#static-blog a:before {
+ content:' \f070';
+ font-size:1rem;
+ vertical-align:bottom;
+ padding-right:0.5em;
+ font-family:"Font Awesome 5 Free";
+ color:gray;
+}
+#top[class*="vip-mode-"].vip-mode-static .menu .vip-zone a,
+.vip-mode-catart article.article header h2 a,
+.vip-mode-catart article.article .more a,
+.vip-mode-catart article.article ~ span a[title~="Fil"],
+.vip-mode-catart aside .arch-list a,
+.vip-mode-blog aside .arch-list a,
+.vip-mode-catart aside .lastcom-list a,
+.vip-mode-blog aside.lastcom-list a,
+.vip-mode-catart aside .cat-list a,
+.vip-mode-blog aside .cat-list a,
+.vip-mode-blog aside .lastart-list a,
+.vip-mode-catart aside .lastart-list a,
+.vip-mode-blog li#static-blog a ,
+.vip-mode-catart li#static-blog a {
+ color:lightgray;
+  background:white;
+}
+/* message de remplacement des contenus VIP */
+p.alert.red.xy-center {
+ width:max-content;
+ max-width:100%;
+ margin:3rem auto;
+ color:darkgreen;
+}
+p.alert.red.xy-center::first-line {
+ color:crimson;
+}
+
+/* cache formulaire de commentaire si présent */
+#top.vip-mode-blog main article ~ form,
+#top.vip-mode-catart main article ~ form {
+ display:none;
+}
+
+/* #VIP_ZONE  end/fin style site.css*/

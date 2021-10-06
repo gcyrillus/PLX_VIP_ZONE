@@ -1,0 +1,77 @@
+/* #VIP_ZONE  style site.css*/
+
+.grid-center {
+ display: grid;
+ gap: 0.5em;
+ justify-content: center;
+}
+.gridx2 {
+ display: grid;
+ grid-template-columns: repeat(2, auto);
+ align-items:center;
+ gap: 0.5em;
+}
+
+.gridx2 p.alert.red{
+  width:max-content;
+  max-width:80%;
+}
+.gridx2 p.alert.red:empty {
+  visibility:hidden;
+}
+.visitorUser form {
+ display: grid;
+ gap: 0.25em;
+}
+.visitorUser textarea {
+ width: 100%;
+ background: linear-gradient(to bottom,#dee 0 1.5em,gray 1.5em 1.55em,transparent 1.55em),repeating-linear-gradient(to bottom, transparent 0 1.4em, lightgray 1.5em);
+ word-spacing: 0.5em;
+ line-height: 1.5em;
+}
+.visitorUser [type="submit"] {
+ margin: auto;
+  display:block;
+}
+form {
+ margin: 0.5em 0;
+}
+.grid-center form fieldset {
+ all: revert;
+}
+.row1-2col {
+ grid-row:1;
+ grid-column:1/-1;
+}
+.visitorUser :is(.CodeMirror) {
+ height:auto;
+  background:#def
+}
+.visitorUser :is(.CodeMirror .CodeMirror-code > :first-child pre) {
+ background:#f7f7f7;
+ font-weight:bold;
+}
+
+.visitorUser button:before {
+ font-family: "Font Awesome 5 Free";
+ content:'\f6dd';
+ font-weight:bold;
+ color:gold;
+ font-size:2rem;
+ padding-right:0.5em;
+ display:inline-block;
+}
+
+#form_plugins span[data-scope=""],
+#plugins-table tbody tr[data-scope=""] td.wrap strong:first-of-type {
+	background :linear-gradient(45deg, #43b0f9 50%, lightgreen 50% );
+	color: #fff;
+}
+#form_plugins td.wrap {
+ white-space:pre-wrap;
+}
+.grid-center form {min-width:360px;}
+.grid-center label {font-weight:bold;text-align:right;}
+.grid-center button {width:16em;height:auto}
+.grid-center input{min-width:16em;}
+/* #VIP_ZONE  end/fin style site.css*/

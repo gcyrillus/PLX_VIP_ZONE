@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+   <title>Espace Privé</title>
+   <author>gcyrillus</author>
+   <version>1.05</version>
+   <date>03/10/2021</date>
+    <site>https://re7net.com</site>
+    <repository>https://github.com/gcyrillus/PLX_VIP_ZONE/tree/v1.05</repository>
+   <description><![CDATA[Privatisez votre PluXml: 
+   * Ajout d'un profil V.I.P. pour un accés privilegier à certaines parties ou pages statiques de votre site. 
+   * Au choix : le blog, les pages statiques ou les pages catégories et articles.
+   * Ajout de page(s) statique(s) individuelle(s) privatisée(s) (en groupe VIP)]]> </description>
+    <scope></scope>
+</document>
