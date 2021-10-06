@@ -8,7 +8,6 @@
             'AdminPrepend',
 			'AdminAuthPrepend',
 			'AdminAuthTop',
-            'AdminAuthEndHead',
             'AdminTopEndHead',
             'AdminUsersTop',
 			'AdminSettingsPluginsTop',
@@ -146,14 +145,6 @@
             echo self::END_CODE;
         }
 
-				#On stocke la page qui a requis une authentification dans un cookie
-        public function AdminAuthEndHead() {
-            echo self::BEGIN_CODE;
-?>
-            if(!empty($_GET['page']))  { $_SESSION['pageRequest'] =   $_GET['page']  ;}		
-<?php
-            echo self::END_CODE;
-        }
 
 	    #On renvoi le VIP vers la page privée demandée aprés authentification
         public function AdminTopEndHead() {
@@ -216,19 +207,23 @@
 		  #Selon le mode privatisé, on redirige vers la page d'authenfication si par encore logué
 		  if($parameter =="catart") {
 		        if (!isset($_SESSION['profil']) && ($plxMotor->mode !== 'home' ) && ($plxMotor->mode !== 'static' ) && ($plxMotor->mode !== 'search' )) {
-					header("Location: ".PLX_ROOT."core/admin/auth.php?page=".$_SERVER['REQUEST_URI']);
+					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
+					header("Location: /core/admin/");
 					exit;
 				}
 		}
 		  else if ($parameter =="static") {
 				if (!isset($_SESSION['profil']) && ($plxMotor->mode === 'static' )) {
-					header("Location: ".PLX_ROOT."core/admin/auth.php?page=".$_SERVER['REQUEST_URI']);
+					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
+					echo $_SESSION['pageRequest'];
+					header("Location: /core/admin/");
 					exit;
 				}
 		}	
 		  else if ($parameter =="blog") {
 				if (!isset($_SESSION['profil']) && (($plxMotor->mode === 'home' ))) {
-					header("Location: ".PLX_ROOT."core/admin/auth.php?page=".$_SERVER['REQUEST_URI']);
+					$_SESSION['pageRequest']=$_SERVER['REQUEST_URI'];
+					header("Location: /core/admin/");
 					exit;
 				}
 		}
