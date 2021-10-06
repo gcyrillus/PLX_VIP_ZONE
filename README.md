@@ -1,4 +1,4 @@
-# PLX_VIP_ZONE <sub><sup>(latest https://github.com/gcyrillus/PLX_VIP_ZONE/tree/v1.05 )</sup></sub>
+# PLX_VIP_ZONE
 Plugin pour PluXml , ajoute la gestion d'espace privé ,blog,catégories ét articles ou pages statiques aux choix, inspiré du précédent squelette: https://github.com/gcyrillus/plx-log-visitor
 
 **Le plugin "Espace Privée" permet de rendre tout ou partie de votre site accessible uniquement à des utilisateurs bénéficiant d'un accès V.I.P..**
@@ -44,13 +44,20 @@ Vous pouvez:
    9.  le titre du formulaire de connexion est personnalisé.
    10.  Un VIP qui se déconnecte est renvoyé sur la page d'accueil
    11.  Vérifie la compatibilité de la configuration du mode privée avec la configuration de PluXml (blog ou pas blog ? )
-   12.  ajout d’icônes devient les contenus privatisés si non connecté. (fontawesome 5).
+   12.  ajout d’icônes devant les contenus privatisés si non connecté. (fontawesome 5).
    13.  cache le contenu des articles et des commentaires si non connecté
-   14.  **ajout de page statique privatisée dans un groupe (VIP). <br>Pour utiliser ces pages , il faut les éditer dans la page d'administration "pages statiques" et les activer pour les finaliser et les afficher sur le site**
-   15.  **A la désactivation du plugin , les pages statiques privées du groupe <b>VIP</b>  sont aussi désactivées**
-   16.  **A l'activation du plugin, si des pages statiques privatisées dans le groupe <b>VIP</b> existent elles sont réactivées.**
+   14.  ajout de page statique privatisée dans un groupe (VIP). <br>Pour utiliser ces pages , il faut les éditer dans la page d'administration "pages statiques" et les activer pour les finaliser et les afficher sur le site.
+   15.  A la désactivation du plugin , les pages statiques privées du groupe <b>VIP</b>  sont aussi désactivées.
+   16.  A l'activation du plugin, si des pages statiques privatisées dans le groupe <b>VIP</b> existent elles sont réactivées.
 
 
 ___
-Un fichier `username.csv` de 509 utilisateurs fictifs est inclus dans le dossier `vip_zone/test-CSV_file` du plugin pour vos tests.
+Un fichier `username.csv` de 509 utilisateurs fictifs est inclus dans le dossier `vip_zone/test-CSV_file` du plugin pour vos tests. Ce fichier comportent des erreurs qu'un message vous notifiera, il vous suffit de vous rendre au numéros de lignes indiquées et de faire la correction dans l'éditeur texte du plugin.
+___
+
+### Note à l'installation et sa position dans la page d'administration des plugins. 
+Selon l'ordre du plugin dans la page `http://votrePluXml.com/core/admin/parametres_plugins.php`  si vous utilisez un autre plugin , comme ***MySearch: moteur de recherche***, qui s'ajoute en lien dans le menu,ce type de plugin sera considéré comme une page statique et sera privatisé si l'option de configuration est calé sur ***Pages Statiques*** .
+ Pour garder les pages de ce type de plugin en accès libre, il faut que le plugin `vip_zone , intitulé *'Espace Privée'* soit placé devant. A défaut, tous les plugins placés derrière et se greffant au menu seront considérés comme des pages statiques privatisables.
+
+Pour replacer le plugin en amont de vos autre plugins, un glisser/déposer suffit ou bien indiquez le numéro de position **-1** pour le remettre en tête de liste,. En fin, sauvegardez la modification de la liste des plugins.
 ___
