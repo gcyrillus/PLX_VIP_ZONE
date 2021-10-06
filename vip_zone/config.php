@@ -1,6 +1,5 @@
 <?php if(!defined("PLX_ROOT")) exit; 
 
-
 	// configuation : fait un backup du fichier users.xml
 	if (!file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml.bak')) {
 		$file = PLX_ROOT.PLX_CONFIG_PATH.'users.xml';
@@ -17,10 +16,10 @@
         exit;
 		}
 	}
-	
+		//maj du fichier username.csv		
   if(!empty($_GET['ploc'])) {	  
 	if(!empty($_POST['csv'])) {	 
-		//maj du fichier username.csv	
+
 		$fileupdate = fopen(PLX_PLUGINS.$plugin."/username.csv", "w")  ;
 		fwrite($fileupdate, $_POST['csv']);
 		$fileCsv=$_POST['csv'];
@@ -29,8 +28,9 @@
 	updateFromCsv(); 
   }
   
+	//maj configuration zone privatisée  
 if(!empty($_POST['privatize'])) {
-	//maj configuration zone privatisée
+
 	
 	if($_POST['privatize'] =="catart") {
 		$vip = "catart";
@@ -50,8 +50,12 @@ if(!empty($_POST['privatize'])) {
 		header('Location: parametres_plugin.php?p='.$plugin);
 	exit;
     }	
-	
-	
+
+//ajout d'une page static privatisé dans le groupe V.I.P.	
+if (!empty($_POST['newVipStatic'])) {
+	addVipStatic();
+}	
+
 // creation du fichier username.csv si absent
 if  (@($open = fopen(PLX_PLUGINS.$plugin."/username.csv", "r")) !== FALSE) {
 	 $fileCsv = file_get_contents(PLX_PLUGINS.$plugin."/username.csv", true);
@@ -66,12 +70,35 @@ else {
   
 
   <?php
-     $configZone = $plxPlugin->getParam('privatize');
-	 if($configZone =="none")   {$none=" selected ";}   else {$none="";}
-	 if($configZone =="catart") {$catart=" selected ";} else {$catart="";}
-	 if($configZone =="static") {$static=" selected ";} else {$static="";}
-	 if($configZone =="blog")   {$blog=" selected ";}   else {$blog="";} 
+		#verif compatibilité mode PLuXMl et mode privatisé
+		$plxMotor = plxMotor::getInstance();
+    	$configZone = $plxPlugin->getParam('privatize');
+		#message d'alert
+		$messageZone='';
+
+		#selectionne le parametre active
+			if($configZone =="none")   {$none=" selected "  ;}   					else {$none=""  ;}
+			if($configZone =="catart") {$catart=" selected ";}   					else {$catart="";}
+			if($configZone =="blog")   {$blog=" selected "  ; $static="disabled ";} else {$blog=""  ;} 
+			if($configZone =="static") {$static=" selected "; $blog="disabled";   } else {$static="";}
+			
+        if (isset($plxMotor->aStats[$plxMotor->aConf['homestatic']]) and $configZone =="static") { 
+			$static="disabled ";
+			$messageZone = "L_UNSET_PRIVATE_ZONE_STATIC_TO_NONE";
+			$plxPlugin->setParam('privatize', 'none', 'cdata');
+			$plxPlugin->saveParams(); 
+		}		
+		else if ((empty($plxMotor->aConf['homestatic'] ) and $configZone =="blog")) {
+			$blog="disabled"; 
+			$messageZone = "L_UNSET_PRIVATE_ZONE_BLOG_TO_NONE";
+			$plxPlugin->setParam('privatize', 'none', 'cdata');
+			$plxPlugin->saveParams();			
+			
+		}
 	?>
+		
+		
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" media="screen"/>
 	<div  class="grid-center">
 	<div>
 		<form action="" method="post">
@@ -85,10 +112,49 @@ else {
 				<option value="catart" <?php  echo $catart; ?> ><?php $plxPlugin->lang("L_ZONE_CAT_ART"); ?></option>
 				<option value="stat"  <?php  echo $static; ?>  ><?php $plxPlugin->lang("L_ZONE_STATIC");  ?></option>
 			</select>
-			<br>
+			<p class="alert red"><?php echo $plxPlugin->lang($messageZone); ?></p>
 			<input value="<?php  $plxPlugin->lang("L_SAVE_VIP_ZONE_SELECTED"); ?>"  type="submit">
 				</div>
 				</fieldset>
+		</form>
+		<form action=" " method="post" autocomplete="off">
+			<fieldset><legend><?php echo  $plxPlugin->lang("L_NEW_STATIC_VIP").' - '. L_CONFIG_VIEW_HOMESTATIC_ACTIVE  ?></legend>
+			
+				<div class="gridx2">
+					<label for="newVipStatic"> <?php echo L_STATICS_TITLE ; ?> </label>
+					<div class="gridx2">
+						<input type="text"   name="newVipStatic" >
+						<input type="submit" name="update" value="<?php echo L_STATICS_UPDATE ?>" />
+					</div>
+				 </div>
+			</fieldset>
+			<script>
+			let ipt = document.querySelector("[name='newVipStatic']");
+
+			ipt.addEventListener("keyup", function () {
+				checkValue(ipt.value, statName_arr);
+			});
+
+			//verifie si le nom de page existe
+			const statName_arr = [<?php $plxMotor = plxMotor::getInstance(); $noms = $plxMotor->aStats; foreach($noms as $nb => $nom){ echo "'".$nom['name']."',";} echo "'".time(); ?>'];
+				function checkValue(value, arr) {
+						for (let i = 0; i < arr.length; i++) {
+							let name = arr[i];
+							if (name == value) {
+								ipt.value= prompt('<?php echo L_ERR_STATIC_ALREADY_EXISTS ; ?> : ' + ipt.value +' \n\n<?php echo L_MEDIAS_NEW_NAME .':' ;  ?>');
+								checkValue(ipt.value, arr);// juste au cas c'est pas clair
+								break;
+							}
+						}
+					}
+		</script>
+		<aside><?php 
+		if (!empty($_POST['newVipStatic'])) {
+			echo '<p class="alert orange">'.$plxPlugin->getLang("L_DO_UPDATE_NEW_VIP_STAT").' <a href="'. PLX_ROOT.'core/admin/statiques.php" style="color:#258fd6;">'. L_STATICS_PAGE_TITLE .'</a></p>';
+		} else {
+		echo '<small><a href="'. PLX_ROOT.'core/admin/statiques.php" style="color:#258fd6;">'. L_STATICS_PAGE_TITLE .'</a></small>';
+		}		?>
+		</aside>
 		</form>
 	</div>
 	<div class="visitorUser">
@@ -96,18 +162,20 @@ else {
 			<fieldset>
 				<legend><?php  $plxPlugin->lang("L_BATCH_NEW_VIPS"); ?></legend>
 				<div class="gridx2">
-					<button type="button" name="blobupload" style="margin-top:auto;background:green;color:ivory;" onclick="dl_CSV();" ><?php $plxPlugin->lang("L_DL_101_CSV_FILE") ?></button>
+					<button type="button" name="blobupload" style="margin-top:auto;background:green;color:ivory;" onclick="dl_CSV();" > <?php $plxPlugin->lang("L_DL_101_CSV_FILE") ?></button>
 					<?php if(!empty($_GET['upmsg']) &&  ($_GET['upmsg']=="fail")){ echo '<p class="alert red row1-2col" >'.L_SAVE_FILE_ERROR.' <br> '.L_PLUGINS_REQUIREMENTS.': '.L_FILE_REQUIRED.'  <b>username.csv</b>.</p>'; }  ?>
 					<?php if(!empty($_GET['upmsg']) && ($_GET['upmsg']=="sucess")){ echo '<p class="alert green row1-2col">'.L_SAVE_FILE_SUCCESSFULLY.'</p>'; }  ?>
 					<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
 					<input name="userfile" type="file" accept=".csv"  required ><br>
-					<input type="submit" value="<?php $plxPlugin->lang("L_UPLOAD_NEW_CSV_FILE"); ?>" />
+					<button type="submit"> <?php $plxPlugin->lang("L_UPLOAD_NEW_CSV_FILE"); ?></button>
 				</div>
 			</fieldset>
 		</form>
+	</div>				
+<?php
 
-	<?php
-	echo '<form action="parametres_plugin.php?p='.$plugin.'&ploc=envoyer" method="post" >
+	echo '	<div class="visitorUser">
+		<form action="parametres_plugin.php?p='.$plugin.'&ploc=envoyer" method="post" >
 		<fieldset><legend> ';
 			$plxPlugin->lang("L_SAVE_VIP_PROFILE_FILE_ONLINE");
 			echo ':</legend>
@@ -117,9 +185,9 @@ else {
 			$plxPlugin->lang("L_UPDATE_NEW_USERS_CSV");
 			echo '" type="submit">
 			</fieldset>
-	</form>
-
+		</form>
 	</div>
+
 	<footer>
 		<p>';
 			$plxPlugin->lang("L_INFO_CONFIG_PLUGIN");
@@ -136,13 +204,9 @@ else {
 			echo '<br>'.PLX_PLUGINS.$plugin.'/<b>username.csv</b></li>
 		</ol>
 	</footer>
-	</div>';	
-/*
- <!-- ';
-			$plxPlugin->lang("");
-			echo ' -->
-*/	
-
+	';	
+?></div><!-- zone de repli code -->
+<?php
 class SimpleXMLExtended extends SimpleXMLElement {
 // from https://web.archive.org/web/20110223233311/http://coffeerings.posterous.com/php-simplexml-and-cdata	
   public function addCData($cdata_text) {
@@ -151,9 +215,12 @@ class SimpleXMLExtended extends SimpleXMLElement {
     $node->appendChild($no->createCDATASection($cdata_text)); 
   } 
 }
+
 function updateFromCsv() {
+	$plxMotor = plxMotor::getInstance();
 	// on verfie que nos fichiers sont accessibles
-	if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS.'/vip_zone/username.csv', 'r')) !== FALSE) && (!isset($_GET['upmsg']))) {		
+	if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS.'/vip_zone/username.csv', 'r')) !== FALSE) && (!isset($_GET['upmsg']))) {
+		
 		// on commence avec le fichier csv  
 		while (($data = fgetcsv($open, 1000, ";")) !== FALSE)     {        
 		  $array[] = $data; 
@@ -181,7 +248,7 @@ function updateFromCsv() {
 					//test si données extraites
 					if((!isset($line[0])) or (!isset($line[1])) or (!isset($line[2])) or (!isset($line[3]))) {
 					$nbRecords++;
-					echo	'<p class="alert red "> Syntax error to fix on user record line (missing field): <b> '.$nbRecords  .'</b></p>';
+					echo	'<p class="alert red "> '.$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang('L_ERROR_BATCH_RECORDS').': <b> '.$nbRecords  .'</b></p>';
 					 
 					$fileError ='1';
 
@@ -255,12 +322,95 @@ function updateFromCsv() {
 	}
 }
 
+function addVipStatic(){
+	    $plxMotor = plxMotor::getInstance();
+		
+		// on recupere le fichier XML
+		
+	#on verifie que l'on a accés au fichier de config
+	if (file_exists(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml')) {
+			$xml = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml', true) ;
+
+		// on charge le fichier xml
+		$doc = new SimpleXMLExtended($xml); 
+		
+		// on compte ses enregistrements
+		$kids = $doc->children();
+		$nbUser = count($kids);
+		$nbUser++;
+
+		// on alimente les données visiteur V.I.P..
+					$element = $doc->addChild('statique'); 
+					
+					
+					$element->addAttribute('number', str_pad($nbUser, 3,'0', STR_PAD_LEFT)  );
+					$element->addAttribute('active', '0' );
+					$element->addAttribute('menu', 'oui' );
+					$element->addAttribute('url',  $_POST["newVipStatic"]  );	   
+					
+					$element->addAttribute('template', 'static.php' );
+					
+					$group = $element->addChild('group'); 
+					$group->addCData('V.I.P.'); 
+
+
+					$name = $element->addChild('name'); 
+					$name->addCData($_POST['newVipStatic']); 
+
+					$meta_description = $element->addChild('meta_description'); 
+					$meta_description->addCData(''); 
+	
+					
+					$title_htmltag = $element->addChild('title_htmltag'); 
+					$title_htmltag->addCData(''); 
+					
+
+					$date_creation = $element->addChild('date_creation'); 
+					$date_creation->addCData(date('YmdHi')); 
+
+					$date_update = $element->addChild('date_update'); 
+					$date_update->addCData(date('YmdHi')); 
+
+					$element = $element.'\n';	
+					
+					
+					$content="<?php if (!isset(\$_SESSION['profil']) ) { header(\"Location: \".PLX_ROOT.\"core/admin/auth.php?page=\".\$_SERVER['REQUEST_URI']);} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");
+					
+					
+					if  (@($open = fopen(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php', "r")) !== FALSE) {
+						//okay pas de doublon ... en principe
+					}
+					else {
+						$open = fopen(PLX_ROOT.'data/statiques/'.str_pad($nbUser, 3,'0', STR_PAD_LEFT).'.'.$_POST["newVipStatic"].'.php', 'w') ;
+						fwrite($open, $content);
+						fclose($open);
+					}
+					}			   
+
+				
+		if (!isset($fileError)) {
+			$xmlDoc = new DOMDocument ();
+			$xmlDoc->preserveWhiteSpace = false;
+			$xmlDoc->formatOutput = true;
+			$xmlDoc->loadXML ( $doc->asXML() );
+			// on sauvegarde le fichier xml mis à jour.
+			$xmlDoc->save(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml');
+			echo '<p class="alert green ">'.L_SAVE_FILE_SUCCESSFULLY.'</p>';
+		}	
+
+		else {
+			exit(L_SAVE_FILE_ERROR.' statiques.xml .');
+			}
+}	
+
 ?>
+<!-- code mirror -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/codemirror.min.css" integrity="sha512-6sALqOPMrNSc+1p5xOhPwGIzs6kIlST+9oGWlI4Wwcbj1saaX9J3uzO3Vub016dmHV7hM+bMi/rfXLiF5DNIZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/codemirror.min.js" integrity="sha512-Mq3vhmcyngWQdBzrOf0SA5p9O3WePmAFfsewXSy5v3BzreKxO4WNzIYa9MyWTNBWTjERTNrU5dBnqbEKIl/4dA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/mode/meta.min.js" integrity="sha512-/2x+sfL5ERHfoViXm/UncFBzaD54f2bkjEui6w2IheEUafG2gcHJv3gQ4VDIqNr+LuApQwpnsjjrEMXI43nPzg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- add codemirror to textarea editing CSV file -->
 <script>
-//add codemirror to textarea
+
 var editor = CodeMirror.fromTextArea(document.getElementById('csv'), {
     lineNumbers: true,
     mode: 'text/plain',
