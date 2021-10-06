@@ -81,6 +81,7 @@ else {
 			if($configZone =="catart") {$catart=" selected ";}   					else {$catart="";}
 			if($configZone =="blog")   {$blog=" selected "  ; $static="disabled ";} else {$blog=""  ;} 
 			if($configZone =="static") {$static=" selected "; $blog="disabled";   } else {$static="";}
+                        if(empty($plxMotor->aConf['homestatic'])) {$blog="disabled"; }
 			
         if (isset($plxMotor->aStats[$plxMotor->aConf['homestatic']]) and $configZone =="static") { 
 			$static="disabled ";
