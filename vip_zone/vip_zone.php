@@ -37,61 +37,56 @@
 		$this->setAdminProfil(PROFIL_ADMIN);
         }
 		
-		
-		
+	
 		#code à exécuter à la désactivation du plugin
         public function OnDeactivate() {		
-		#desactive les comptes visiteurs	
-			$deactivateVisitors=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."users.xml") or die("Error: Cannot create object");
-			foreach($deactivateVisitors->children() as $users) {
-				if ( $users['profil'] =='5') {
-				$users->attributes()->delete = '1';
-				}
-			} 
-			$deactivateVisitors->asXml(PLX_ROOT.PLX_CONFIG_PATH."users.xml");
-							
-		#desactive les pages static VIP
-			$deactivateVipStatics=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml") or die("Error: Cannot create object");
-			foreach($deactivateVipStatics->children() as $vipStats) {
-				if ( (string) $vipStats->group =='V.I.P.') {	
-					$vipStats->Attributes()->active='0';
-				}
-			} 		
-			$deactivateVipStatics->asXml(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml");
+			#desactive les comptes visiteurs	
+				$deactivateVisitors=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."users.xml") or die("Error: Cannot create object");
+				foreach($deactivateVisitors->children() as $users) {
+					if ( $users['profil'] =='5') {
+					$users->attributes()->delete = '1';
+					}
+				} 
+				$deactivateVisitors->asXml(PLX_ROOT.PLX_CONFIG_PATH."users.xml");
+								
+			#desactive les pages static VIP
+				$deactivateVipStatics=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml") or die("Error: Cannot create object");
+				foreach($deactivateVipStatics->children() as $vipStats) {
+					if ( (string) $vipStats->group =='V.I.P.') {	
+						$vipStats->Attributes()->active='0';
+					}
+				} 		
+				$deactivateVipStatics->asXml(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml");
 		}
 		
         #code à exécuter à l’activation du plugin 
         public function OnActivate() { 
-		#réactive compte visiteur s'il y en a
-			$reactivateVisitors=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."users.xml") or die("Error: Cannot create object");
-			foreach($reactivateVisitors->children() as $users) {
-				if (( $users['profil'] =='5') and ( $users['delete'] =='1') ) {
-				$users->attributes()->delete = '0';
-				}
-			} 
-			$reactivateVisitors->asXml(PLX_ROOT.PLX_CONFIG_PATH."users.xml");	
-			
-		#reactive pages static VIP
-			$reactivateVipStatics=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml") or die("Error: Cannot create object");
-			foreach($reactivateVipStatics->children() as $vipStats) {
-				if ( (string) $vipStats->group =='V.I.P.') {	
-					$vipStats->Attributes()->active='1';
-				}
-			} 
-			$reactivateVipStatics->asXml(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml");		
-		
-
+			#réactive compte visiteur s'il y en a
+				$reactivateVisitors=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."users.xml") or die("Error: Cannot create object");
+				foreach($reactivateVisitors->children() as $users) {
+					if (( $users['profil'] =='5') and ( $users['delete'] =='1') ) {
+					$users->attributes()->delete = '0';
+					}
+				} 
+				$reactivateVisitors->asXml(PLX_ROOT.PLX_CONFIG_PATH."users.xml");	
+				
+			#reactive pages static VIP
+				$reactivateVipStatics=simplexml_load_file(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml") or die("Error: Cannot create object");
+				foreach($reactivateVipStatics->children() as $vipStats) {
+					if ( (string) $vipStats->group =='V.I.P.') {	
+						$vipStats->Attributes()->active='1';
+					}
+				} 
+				$reactivateVipStatics->asXml(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml");		
 		}
 
 #HOOKS		
 		
-		#ajout valeur profil VIP
+		#ajout constante profil VIP
 		public function AdminPrepend() {
 			echo self::BEGIN_CODE;
 ?>
-         const PROFIL_VISITOR = 5; 		
-		 
-			
+         const PROFIL_VISITOR = 5; 					
 <?php
             echo self::END_CODE;
         }
@@ -100,8 +95,6 @@
 		public function  AdminAuthPrepend() {
 			echo self::BEGIN_CODE;
 ?>
-
-
 		if (!empty($_GET['d']) and $_GET['d'] == 1) {
 
 				if(!empty($_SESSION['pageRequest'])) {
@@ -116,8 +109,6 @@
 				}
 			exit;
 		}    
-
-
 <?php
             echo self::END_CODE;
         }
@@ -140,10 +131,8 @@
 				if (is_file($langfile)) {
 					include $langfile;
 					$lang = $LANG; 
-				}
-		 
+				}		 
 		$oldValue = $lang["L_LOGIN_PAGE"];
-
 		echo '
 		<script>
 		window.addEventListener("load", (event) => {
@@ -152,8 +141,7 @@
 			  if (h1.textContent =="'. $oldValue.'") { h1.textContent ="'.$plxAdmin->aConf['title'].'\n\n'.$newValue.'";h1.style.whiteSpace="pre"; }
 			});
 		});
-		</script>';
-	 
+		</script>';	 
 <?php
             echo self::END_CODE;
         }
@@ -175,16 +163,13 @@
 <?php
             echo self::END_CODE;
         }
-
 		#On ajoute un profil utilisateur
         public function AdminUsersTop() {
 	    echo self::BEGIN_CODE;
 ?>
-
 		$plxMotor = plxMotor::getInstance();
 		$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone'];
-		$VIP_Profil = $plugin->getLang('L_PROFIL_VISITOR');
-				
+		$VIP_Profil = $plugin->getLang('L_PROFIL_VISITOR');				
 				# Tableau des profils
 				$aProfils = array(
 					PROFIL_ADMIN => L_PROFIL_ADMIN,
@@ -194,13 +179,11 @@
 					PROFIL_WRITER => L_PROFIL_WRITER,
 					PROFIL_VISITOR => $VIP_Profil   
 				);
-
 <?php
             echo self::END_CODE;
         } 
 		
-		
-       #	do not use , not efficient , note to the dev
+       #	do not use , only for test & note to the dev. Serait-ce utile ?
         public function AdminSettingsPluginsTop() {	
 	    echo self::BEGIN_CODE;
 ?>
@@ -208,28 +191,18 @@
 			$xmlplug = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'plugins.xml', true);
 			$topDoc ='<document>';
 			$topPlug= '	<plugin name="vip_zone" scope=""></plugin>';
-
 			$newxmlplug = str_replace($topPlug, '', $xmlplug);
-
 			$res = str_replace($topDoc, $topDoc.' '.$topPlug, $newxmlplug);		
-
 			$doc = simplexml_load_string($res);
 			$endres = new DOMDocument ();
 			$endres->preserveWhiteSpace = false;
 			$endres->formatOutput = true;
 			$endres->loadXML ( $doc->asXML() );
 			$endres->save(PLX_ROOT.PLX_CONFIG_PATH.'plugins.xml');
-		*/			 
-
-	 
+		*/			 	 
 <?php
             echo self::END_CODE;
         }	
-
-
-
-		
- 
 
 		#Avant l'affichage de la page, on verifie si il y a besoin d'authenfication en comparant la configuration du plugin et le type de page demandée
         public function ThemeEndHead() {	
@@ -239,11 +212,10 @@
 		  $plxMotor = plxMotor::getInstance();
 		  $plugin = $plxMotor->plxPlugins->aPlugins['vip_zone'];
 		  $parameter = $plugin->getParam('privatize');
-
-		
+	
 		  #Selon le mode privatisé, on redirige vers la page d'authenfication si par encore logué
 		  if($parameter =="catart") {
-		        if (!isset($_SESSION['profil']) && ($plxMotor->mode !== 'home' ) && ($plxMotor->mode !== 'static' )) {
+		        if (!isset($_SESSION['profil']) && ($plxMotor->mode !== 'home' ) && ($plxMotor->mode !== 'static' ) && ($plxMotor->mode !== 'search' )) {
 					header("Location: ".PLX_ROOT."core/admin/auth.php?page=".$_SERVER['REQUEST_URI']);
 					exit;
 				}
@@ -280,14 +252,12 @@
 	    echo self::END_CODE;
         }
 
-
         #Ajout d'un bouton de deconnexion dans le menu principal si le visiteur est authentifier .	
         public function plxShowStaticListEnd() {	
 	    echo self::BEGIN_CODE;
 ?>
 		$plxMotor = plxMotor::getInstance();
-		$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone'];
-		
+		$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone'];		
 			 if ((isset($_SESSION['profil'])) && ($_SESSION['profil']=='5') ) { array_push($menus, '<li class="static menu noactive"  id="vip_logout"><a href="'.PLX_ROOT.'core/admin/auth.php?d=1&logout=1"  title="'.$plugin->getLang("L_VIP_LOGOUT_TITLE").'">'.$plugin->getLang("L_VIP_LOGOUT").'</a></li>');}
 
 			 if (!isset($_SESSION['profil'])) {
@@ -346,23 +316,15 @@
 <?php
             echo self::END_CODE;
         }	
-
-
 		
-
-		
-
         #cache le contenu des article si en zone VIP non connecté.	
         public function plxMotorParseArticle() {	
 	    echo self::BEGIN_CODE;
 ?>
 		if (!isset($_SESSION['profil'])) {
-
-			# pour accés fichier lang du plugin	
+			# pour accéder au plugin	
 			$plxMotor = plxMotor::getInstance();
 			$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone']; 
-			
-			$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone'];
 			$parameter = $plugin->getParam('privatize');
 			
 			$artHidden = $plugin->getLang("L_HIDDEN_ARTICLE");
@@ -394,22 +356,21 @@
 					'date_update'		=> plxUtils::getValue($values[$iTags['date_update'][0]]['value'], $tmp['artDate']),
 				);
 			}
-		}
-
-	 
+		}	 
 <?php
             echo self::END_CODE;
         }		
 		
-
-        #cache les commentaire  si en zone VIP non connecté.	
+        #cache les commentaires si en zone VIP 
         public function plxMotorParseCommentaire() {	
 	    echo self::BEGIN_CODE;
 ?>
-			if (!isset($_SESSION['profil'])) {
-				# pour accés fichier lang du plugin	
+				# pour accéder au plugin	
 				$plxMotor = plxMotor::getInstance();
 				$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone']; 
+				$parameter = $plugin->getParam('privatize');
+				
+			if(($parameter =='catart') or ($parameter =='blog') ){ 
 				$com['content'] = $plugin->getLang("L_HIDDEN_COMMENT");
 			}
 <?php
