@@ -375,8 +375,7 @@ function addVipStatic(){
 					$element = $element.'\n';	
 					
 					
-					$content="<?php if (!isset(\$_SESSION['profil']) ) { header(\"Location: \".PLX_ROOT.\"core/admin/auth.php?page=\".\$_SERVER['REQUEST_URI']);} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");
-					
+					$content="<?php if (!isset(\$_SESSION['profil']) ) {\$_SESSION['pageRequest'] = \$_SERVER['REQUEST_URI'] ; header(\"Location: /core/admin/\");} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");					
 					
 					if  (@($open = fopen(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php', "r")) !== FALSE) {
 						//okay pas de doublon ... en principe
