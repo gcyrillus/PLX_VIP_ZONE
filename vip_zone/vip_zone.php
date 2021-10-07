@@ -215,7 +215,6 @@
 		  else if ($parameter =="static") {
 				if (!isset($_SESSION['profil']) && ($plxMotor->mode === 'static' )) {
 					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
-					echo $_SESSION['pageRequest'];
 					header("Location: /core/admin/");
 					exit;
 				}
