@@ -1,5 +1,7 @@
 <?php if(!defined("PLX_ROOT")) exit; 
-
+	$plxAdmin = plxAdmin::getInstance();
+	$plxMotor = plxMotor::getInstance();
+			
 	// configuation : fait un backup du fichier users.xml
 	if (!file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml.bak')) {
 		$file = PLX_ROOT.PLX_CONFIG_PATH.'users.xml';
@@ -17,7 +19,7 @@
 		}
 	}
 		//maj du fichier username.csv		
-  if(!empty($_GET['ploc'])) {	  
+	if(!empty($_GET['ploc'])) {	  
 	if(!empty($_POST['csv'])) {	 
 
 		$fileupdate = fopen(PLX_PLUGINS.$plugin."/username.csv", "w")  ;
@@ -27,28 +29,31 @@
 	}  
 	updateFromCsv(); 
   }
-  
+ 
+	if (!empty($_GET['sendIt'])) {
+		$plxPlugin->resetPluginsToTop();
+		header('Location: parametres_plugin.php?p='.$plugin);			 
+	}	
 	//maj configuration zone privatisée  
-if(!empty($_POST['privatize'])) {
+	if(!empty($_POST['privatize'])) {
+		
+		if($_POST['privatize'] =="catart") {
+			$vip = "catart";
+		}
+		else if ($_POST['privatize'] =="stat") {
+			$vip ="static";
+		}
+		else if ($_POST['privatize'] =="blog") {
+			$vip ="blog";
+		}
+		else if ($_POST['privatize'] =="none") {
+			$vip ="none";
+		}
 
-	
-	if($_POST['privatize'] =="catart") {
-		$vip = "catart";
-	}
-	else if ($_POST['privatize'] =="stat") {
-		$vip ="static";
-	}
-	else if ($_POST['privatize'] =="blog") {
-		$vip ="blog";
-	}
-	else if ($_POST['privatize'] =="none") {
-		$vip ="none";
-	}
-
-        $plxPlugin->setParam('privatize', $vip, 'cdata');
-        $plxPlugin->saveParams();
-		header('Location: parametres_plugin.php?p='.$plugin);
-	exit;
+			$plxPlugin->setParam('privatize', $vip, 'cdata');
+			$plxPlugin->saveParams();
+			header('Location: parametres_plugin.php?p='.$plugin);
+		exit;
     }	
 
 //ajout d'une page static privatisé dans le groupe V.I.P.	
@@ -57,7 +62,7 @@ if (!empty($_POST['newVipStatic'])) {
 }	
 
 // creation du fichier username.csv si absent
-if  (@($open = fopen(PLX_PLUGINS.$plugin."/username.csv", "r")) !== FALSE) {
+if (file_exists(PLX_PLUGINS.$plugin."/username.csv")) {
 	 $fileCsv = file_get_contents(PLX_PLUGINS.$plugin."/username.csv", true);
 }
 else {
@@ -71,9 +76,8 @@ else {
 
   <?php
 		#verif compatibilité mode PLuXMl et mode privatisé
-		$plxMotor = plxMotor::getInstance();
     	$configZone = $plxPlugin->getParam('privatize');
-		#message d'alert
+		#message d'alert , devrait ne jamais s'afficher . Situation en principe gerer en amont sur le formulaire en désactivant les config incompatibles.
 		$messageZone='';
 
 		#selectionne le parametre active
@@ -81,7 +85,7 @@ else {
 			if($configZone =="catart") {$catart=" selected ";}   					else {$catart="";}
 			if($configZone =="blog")   {$blog=" selected "  ; $static="disabled ";} else {$blog=""  ;} 
 			if($configZone =="static") {$static=" selected "; $blog="disabled";   } else {$static="";}
-                        if(empty($plxMotor->aConf['homestatic'])) {$blog="disabled"; }
+			if(empty($plxMotor->aConf['homestatic'])) {$blog="disabled"; }
 			
         if (isset($plxMotor->aStats[$plxMotor->aConf['homestatic']]) and $configZone =="static") { 
 			$static="disabled ";
@@ -100,79 +104,79 @@ else {
 		
 		
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" media="screen"/>
-	<div  class="grid-center">
-	<div>
-		<form action="" method="post">
-		<fieldset><legend>
-			<?php $plxPlugin->lang("L_VIP_ZONE_PRIVATIZED"); ?>
-			</legend><div class="gridx2">
-			<label><?php $plxPlugin->lang("L_VIP_ZONE_SELECTION"); ?></label>
-			<select name="privatize">
-				<option value="none" <?php  echo $none; ?>     ><?php $plxPlugin->lang("L_ZONE_NONE2");   ?></option>
-				<option value="blog"  <?php  echo $blog; ?>    ><?php $plxPlugin->lang("L_ZONE_BLOG");    ?></option>
-				<option value="catart" <?php  echo $catart; ?> ><?php $plxPlugin->lang("L_ZONE_CAT_ART"); ?></option>
-				<option value="stat"  <?php  echo $static; ?>  ><?php $plxPlugin->lang("L_ZONE_STATIC");  ?></option>
-			</select>
-			<p class="alert red"><?php echo $plxPlugin->lang($messageZone); ?></p>
-			<input value="<?php  $plxPlugin->lang("L_SAVE_VIP_ZONE_SELECTED"); ?>"  type="submit">
-				</div>
-				</fieldset>
-		</form>
-		<form action=" " method="post" autocomplete="off">
-			<fieldset><legend><?php echo  $plxPlugin->lang("L_NEW_STATIC_VIP").' - '. L_CONFIG_VIEW_HOMESTATIC_ACTIVE  ?></legend>
-			
-				<div class="gridx2">
-					<label for="newVipStatic"> <?php echo L_STATICS_TITLE ; ?> </label>
+
+	<div  class="grid-center x2">
+		<div class="vip-edit-zone">
+			<form action="" method="post">
+				<fieldset><legend>
+					<?php $plxPlugin->lang("L_VIP_ZONE_PRIVATIZED"); ?>
+					</legend>
 					<div class="gridx2">
-						<input type="text"   name="newVipStatic" >
-						<input type="submit" name="update" value="<?php echo L_STATICS_UPDATE ?>" />
+						<label><?php $plxPlugin->lang("L_VIP_ZONE_SELECTION"); ?></label>
+						<select name="privatize">
+							<option value="none" <?php  echo $none; ?>     ><?php $plxPlugin->lang("L_ZONE_NONE2");   ?></option>
+							<option value="blog"  <?php  echo $blog; ?>    ><?php $plxPlugin->lang("L_ZONE_BLOG");    ?></option>
+							<option value="catart" <?php  echo $catart; ?> ><?php $plxPlugin->lang("L_ZONE_CAT_ART"); ?></option>
+							<option value="stat"  <?php  echo $static; ?>  ><?php $plxPlugin->lang("L_ZONE_STATIC");  ?></option>
+						</select>
+						<p class="alert red"><?php echo $plxPlugin->lang($messageZone); ?></p>
+						<input value="<?php  $plxPlugin->lang("L_SAVE_VIP_ZONE_SELECTED"); ?>"  type="submit">
 					</div>
-				 </div>
-			</fieldset>
-			<script>
-			let ipt = document.querySelector("[name='newVipStatic']");
+				</fieldset>
+			</form>
+			<form action=" " method="post" autocomplete="off">
+				<fieldset><legend><?php echo  $plxPlugin->lang("L_NEW_STATIC_VIP").' <br> '. L_CONFIG_VIEW_HOMESTATIC_ACTIVE  ?></legend>				
+					<div class="gridx2"> 
+						<div class="gridx2">
+							<input type="text"  placeholder="<?php echo L_STATICS_TITLE ; ?>"  name="newVipStatic" >
+							<input type="submit" name="update" value="<?php echo L_STATICS_UPDATE ?>" />
+						</div>
+					</div>
+				</fieldset>
+				<script>
+				let ipt = document.querySelector("[name='newVipStatic']");
 
-			ipt.addEventListener("keyup", function () {
-				checkValue(ipt.value, statName_arr);
-			});
+				ipt.addEventListener("keyup", function () {
+					checkValue(ipt.value, statName_arr);
+				});
 
-			//verifie si le nom de page existe
-			const statName_arr = [<?php $plxMotor = plxMotor::getInstance(); $noms = $plxMotor->aStats; foreach($noms as $nb => $nom){ echo "'".$nom['name']."',";} echo "'".time(); ?>'];
-				function checkValue(value, arr) {
-						for (let i = 0; i < arr.length; i++) {
-							let name = arr[i];
-							if (name == value) {
-								ipt.value= prompt('<?php echo L_ERR_STATIC_ALREADY_EXISTS ; ?> : ' + ipt.value +' \n\n<?php echo L_MEDIAS_NEW_NAME .':' ;  ?>');
-								checkValue(ipt.value, arr);// juste au cas c'est pas clair
-								break;
+				//verifie si le nom de page existe
+				const statName_arr = [<?php  $noms = $plxMotor->aStats; foreach($noms as $nb => $nom){ echo "'".$nom['name']."',";} echo "'".time(); ?>'];
+					function checkValue(value, arr) {
+							for (let i = 0; i < arr.length; i++) {
+								let name = arr[i];
+								if (name == value) {
+									ipt.value= prompt('<?php echo L_ERR_STATIC_ALREADY_EXISTS ; ?> : ' + ipt.value +' \n\n<?php echo L_MEDIAS_NEW_NAME .':' ;  ?>');
+									checkValue(ipt.value, arr);// juste au cas c'est pas clair
+									break;
+								}
 							}
 						}
-					}
-		</script>
-		<aside><?php 
-		if (!empty($_POST['newVipStatic'])) {
-			echo '<p class="alert orange">'.$plxPlugin->getLang("L_DO_UPDATE_NEW_VIP_STAT").' <a href="'. PLX_ROOT.'core/admin/statiques.php" style="color:#258fd6;">'. L_STATICS_PAGE_TITLE .'</a></p>';
-		} else {
-		echo '<small><a href="'. PLX_ROOT.'core/admin/statiques.php" style="color:#258fd6;">'. L_STATICS_PAGE_TITLE .'</a></small>';
-		}		?>
-		</aside>
-		</form>
-	</div>
-	<div class="visitorUser">
-		<form enctype="multipart/form-data" action="<?php echo PLX_PLUGINS.$plugin.'/upCSV.php'; ?>" method="post"  >
-			<fieldset>
-				<legend><?php  $plxPlugin->lang("L_BATCH_NEW_VIPS"); ?></legend>
-				<div class="gridx2">
-					<button type="button" name="blobupload" style="margin-top:auto;background:green;color:ivory;" onclick="dl_CSV();" > <?php $plxPlugin->lang("L_DL_101_CSV_FILE") ?></button>
-					<?php if(!empty($_GET['upmsg']) &&  ($_GET['upmsg']=="fail")){ echo '<p class="alert red row1-2col" >'.L_SAVE_FILE_ERROR.' <br> '.L_PLUGINS_REQUIREMENTS.': '.L_FILE_REQUIRED.'  <b>username.csv</b>.</p>'; }  ?>
-					<?php if(!empty($_GET['upmsg']) && ($_GET['upmsg']=="sucess")){ echo '<p class="alert green row1-2col">'.L_SAVE_FILE_SUCCESSFULLY.'</p>'; }  ?>
-					<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
-					<input name="userfile" type="file" accept=".csv"  required ><br>
-					<button type="submit"> <?php $plxPlugin->lang("L_UPLOAD_NEW_CSV_FILE"); ?></button>
-				</div>
-			</fieldset>
-		</form>
-	</div>				
+			</script>
+				<aside><?php 
+				if (!empty($_POST['newVipStatic'])) {
+					echo '<p class="alert orange">'.$plxPlugin->getLang("L_DO_UPDATE_NEW_VIP_STAT").' <a href="'. PLX_ROOT.'core/admin/statiques.php" style="color:#258fd6;">'. L_STATICS_PAGE_TITLE .'</a></p>';
+				} else {
+				echo '<small><a href="'. PLX_ROOT.'core/admin/statiques.php" style="color:#258fd6;">'. L_STATICS_PAGE_TITLE .'</a></small>';
+				}		?>
+				</aside>
+			</form>
+		</div>
+		<div class="visitorUser">
+			<form enctype="multipart/form-data" action="<?php echo PLX_PLUGINS.$plugin.'/upCSV.php'; ?>" method="post"  >
+				<fieldset>
+					<legend><?php  $plxPlugin->lang("L_BATCH_NEW_VIPS"); ?></legend>
+					<div class="gridx2">
+						<button type="button" name="blobupload"  onclick="dl_CSV();" > <?php $plxPlugin->lang("L_DL_101_CSV_FILE") ?></button>
+						<?php if(!empty($_GET['upmsg']) &&  ($_GET['upmsg']=="fail")){ echo '<p class="alert red row1-2col" >'.L_SAVE_FILE_ERROR.' <br> '.L_PLUGINS_REQUIREMENTS.': '.L_FILE_REQUIRED.'  <b>username.csv</b>.</p>'; }  ?>
+						<?php if(!empty($_GET['upmsg']) && ($_GET['upmsg']=="sucess")){ echo '<p class="alert green row1-2col">'.L_SAVE_FILE_SUCCESSFULLY.'</p>'; }  ?>
+						<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+						<input name="userfile" type="file" accept=".csv"  required ><br>
+						<button type="submit"> <?php $plxPlugin->lang("L_UPLOAD_NEW_CSV_FILE"); ?></button>
+					</div>
+				</fieldset>
+			</form>
+		</div>				
 <?php
 
 	echo '	<div class="visitorUser">
@@ -187,23 +191,77 @@ else {
 			echo '" type="submit">
 			</fieldset>
 		</form>
-	</div>
+	</div>';
 
-	<footer>
-		<p>';
-			$plxPlugin->lang("L_INFO_CONFIG_PLUGIN");
-			echo '</p>
-		<ol>
-			<li>';
-			$plxPlugin->lang("L_USER_FILE");
-			echo '<br>'.PLX_ROOT.PLX_CONFIG_PATH.'<b>users.xml</b></li>
-			<li>';
-			$plxPlugin->lang("L_BACKUP_USER_FILE_FIRST_INSTALL");
-			echo '<br>'.$plxPlugin->getParam('set').'</li>
-			<li>';
-			$plxPlugin->lang("L_BATCH_FILE_NAME_DIRECTORY");
-			echo '<br>'.PLX_PLUGINS.$plugin.'/<b>username.csv</b></li>
-		</ol>
+
+	# on regarde si le plugin est en premiere position, sinon on affiche le formulaire de debogage.
+	$plugPos =  (array)$plxMotor->plxPlugins->aPlugins;
+	foreach($plugPos as $key => $value) {
+		$firstKey = $key;
+		break;// on ne veut que la premiere.
+	}
+
+if ($firstKey !=='vip_zone') {echo '
+	<div class="resetVipFirst grid-center x2 span2col ">
+		<form action="parametres_plugin.php?p='.$plugin.'&sendIt=first" method="post" class="span2col">
+			<fieldset>
+				<legend>'.$plxPlugin->getLang("L_LOAD_VIP_POSITION").'</legend>
+				<p class="alert orange span2col">'.$plxPlugin->getLang("L_LOAD_VIP_WARNING").'</p>
+				<label  class="gridx2">'.$plxPlugin->getLang("L_LOAD_VIP_FIRST").'<input type="submit" name="resetToTop" value="'.L_PLUGINS_APPLY_BUTTON.'" ></label>
+			</fieldset>
+		</form>
+	</div>';
+}	# fin formulaire débogage
+
+	# infos configurations du plugins
+	
+
+			$nbVIP = '0';					
+			$nbactVIP = '0';		
+			$nbStatVIP = '0';		
+			foreach($plxAdmin->aUsers as $users) {
+				if ($users['profil']=='5') {$nbVIP++;}
+				if (($users['profil']=='5') && ($users['active']=='1')) {$nbactVIP++;}
+			}			
+			foreach($plxAdmin->aStats as $statpage) {
+				if ($statpage['group']=='V.I.P.') {$nbStatVIP++;}
+			}
+	
+echo '
+	<footer class="span2col">	
+		<table>
+			<caption>'.$plxPlugin->getLang("L_INFO_CONFIG_PLUGIN").'</caption>
+			<tbody>
+				<tr>
+					<th>'.$plxPlugin->getLang("L_NBR_REGISTERED_VIP").'</th>
+					<td>'.$nbVIP.'</td>
+				</tr>
+				<tr>
+					<th>'.$plxPlugin->getLang("L_NBR_REGISTERED_ACTIVE_VIP").'</th>
+					<td>'.$nbVIP.'</td>
+				</tr>
+				<tr>
+					<th>'.$plxPlugin->getLang("L_CLASS_FOR_BODY").'</th>
+					<td>  <code>vip-mode-'.$plxPlugin->getParam('privatize').'</code></td>
+				</tr>
+				<tr>
+					<th>'.$plxPlugin->getLang("L_NBR_STATIC_VIP").'</th>
+					<td>'.$nbStatVIP.'</td>
+				</tr>
+				<tr>
+					<th>'.$plxPlugin->getLang("L_USER_FILE").'</th>
+					<td>'.PLX_ROOT.PLX_CONFIG_PATH.'<b>users.xml</b></td>
+				</tr>
+				<tr>
+					<th>'.$plxPlugin->getLang("L_BACKUP_USER_FILE_FIRST_INSTALL").'</th>
+					<td>'.$plxPlugin->getParam('set').'</td>
+				</tr>
+				<tr>
+					<th>'.$plxPlugin->getLang("L_BATCH_FILE_NAME_DIRECTORY").'</th>
+					<td>'.PLX_PLUGINS.$plugin.'/<b>username.csv</b></td>
+				</tr>
+			</tbody>
+		</table>
 	</footer>
 	';	
 ?></div><!-- zone de repli code -->
@@ -241,8 +299,6 @@ function updateFromCsv() {
 
 		 // on boucle sur les lignes du fichiers CSV pour récuperer les données et les ajouter aux données existantes 
 		foreach($array as $i => $line){ 
-
-
 				if($i >0) { // on passe la premiere ligne ou sont  stockées les entêtes de colonnes.
 					$nbRecords++; // on compte les enregistrements qui sont ajouter.
 					$nbUser++;
@@ -325,7 +381,7 @@ function updateFromCsv() {
 
 function addVipStatic(){
 	    $plxMotor = plxMotor::getInstance();
-		
+$newVipStatic = $_POST["newVipStatic"]	;	
 		// on recupere le fichier XML
 		
 	#on verifie que l'on a accés au fichier de config
@@ -335,16 +391,21 @@ function addVipStatic(){
 		// on charge le fichier xml
 		$doc = new SimpleXMLExtended($xml); 
 		
-		// on compte ses enregistrements
-		$kids = $doc->children();
-		$nbUser = count($kids);
-		$nbUser++;
+		// on recherche le dernier numero et on l'incremente de 1 pour numeroter notre nouvelle page statique.
+			$searchMax = new SimpleXMLElement($xml);
+			$numbers= array();
+			foreach($searchMax->statique as $a => $b) {
+			   $numbers[]= (string)$b['number'];
+			}
+			sort($numbers);
+			$max=  array_pop($numbers);
+			$max= $max + 1 ;
 
 		// on alimente les données visiteur V.I.P..
 					$element = $doc->addChild('statique'); 
 					
 					
-					$element->addAttribute('number', str_pad($nbUser, 3,'0', STR_PAD_LEFT)  );
+					$element->addAttribute('number', str_pad($max, 3,'0', STR_PAD_LEFT)  );
 					$element->addAttribute('active', '0' );
 					$element->addAttribute('menu', 'oui' );
 					$element->addAttribute('url',  $_POST["newVipStatic"]  );	   
@@ -375,12 +436,13 @@ function addVipStatic(){
 					$element = $element.'\n';	
 					
 					
-					$content="<?php if (!isset(\$_SESSION['profil']) ) {\$_SESSION['pageRequest'] = \$_SERVER['REQUEST_URI'] ; header(\"Location: /core/admin/\");} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");					
+					$content="<?php if (!isset(\$_SESSION['profil']) ) {\$_SESSION['pageRequest'] = \$_SERVER['REQUEST_URI'] ; header(\"Location: /core/admin/\");} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");
 					
-					if  (@($open = fopen(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php', "r")) !== FALSE) {
+					if (!file_exists(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php')) {
+					/*if  (@($open = fopen(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php', "r")) !== FALSE) {
 						//okay pas de doublon ... en principe
 					}
-					else {
+					else {*/
 						$open = fopen(PLX_ROOT.'data/statiques/'.str_pad($nbUser, 3,'0', STR_PAD_LEFT).'.'.$_POST["newVipStatic"].'.php', 'w') ;
 						fwrite($open, $content);
 						fclose($open);

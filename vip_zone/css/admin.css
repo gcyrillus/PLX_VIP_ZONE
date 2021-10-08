@@ -1,23 +1,58 @@
-/* #VIP_ZONE  style site.css*/
-
 .grid-center {
  display: grid;
  gap: 0.5em;
  justify-content: center;
 }
+.grid-center legend:first-line,
+caption{
+  text-transform: uppercase;
+  color:blue;}
+.grid-center legend,
+caption {
+ background: ivory;
+ font-family: courier, monospace;
+ font-size: 1.3rem;
+ white-space:wrap;
+ color:inherit;
+}
+code {
+ background:#f7f7b4;
+ padding: 0 0.2em;
+ color:darkgreen
+}
 .gridx2 {
  display: grid;
  grid-template-columns: repeat(2, auto);
- align-items:center;
+ align-items: center;
  gap: 0.5em;
+ max-width:80%;
 }
-
-.gridx2 p.alert.red{
-  width:max-content;
-  max-width:80%;
+.gridx2 p.alert.red {
+ width: max-content;
+ max-width: 80%;
 }
 .gridx2 p.alert.red:empty {
-  visibility:hidden;
+ visibility: hidden;
+}
+.span2col {
+ grid-column:1/-1;
+}
+.span2col table {
+ border: solid 1px lightgray;
+ display:table;
+ table-layout:fixed;
+ margin:auto;
+ width:90%;
+}
+.span2col th {
+ text-align:right;
+}
+.span2col td {
+ border-left:solid 1px lightgray;
+ text-align:center;
+}
+.span2col td p {
+ min-width:100%;
 }
 .visitorUser form {
  display: grid;
@@ -31,47 +66,70 @@
 }
 .visitorUser [type="submit"] {
  margin: auto;
-  display:block;
+ display: block;
 }
 form {
  margin: 0.5em 0;
+}
+[name="blobupload"] {
+ background: #0291db;
 }
 .grid-center form fieldset {
  all: revert;
 }
 .row1-2col {
- grid-row:1;
- grid-column:1/-1;
+ grid-row: 1;
+ grid-column: 1/-1;
 }
 .visitorUser :is(.CodeMirror) {
- height:auto;
-  background:#def
+ height: auto;
+ background: #def;
 }
 .visitorUser :is(.CodeMirror .CodeMirror-code > :first-child pre) {
- background:#f7f7f7;
- font-weight:bold;
+ background: #f7f7f7;
+ font-weight: bold;
 }
-
 .visitorUser button:before {
  font-family: "Font Awesome 5 Free";
- content:'\f6dd';
- font-weight:bold;
- color:gold;
- font-size:2rem;
- padding-right:0.5em;
- display:inline-block;
+ content: "\f6dd";
+ font-weight: bold;
+ color: gold;
+ font-size: 2rem;
+ padding-right: 0.5em;
+ display: inline-block;
 }
-
 #form_plugins span[data-scope=""],
 #plugins-table tbody tr[data-scope=""] td.wrap strong:first-of-type {
-	background :linear-gradient(45deg, #43b0f9 50%, lightgreen 50% );
-	color: #fff;
+ background: linear-gradient(45deg, #43b0f9 50%, lightgreen 50%);
+ color: #fff;
 }
 #form_plugins td.wrap {
- white-space:pre-wrap;
+ white-space: pre-wrap;
 }
-.grid-center form {min-width:360px;}
-.grid-center label {font-weight:bold;text-align:right;}
-.grid-center button {width:16em;height:auto}
-.grid-center input{min-width:16em;}
-/* #VIP_ZONE  end/fin style site.css*/
+.grid-center form {
+ min-width: 360px;
+}
+.grid-center label {
+ font-weight: bold;
+ text-align: right;
+}
+.grid-center button {
+ width: 16em;
+ height: auto;
+}
+.grid-center input:not([name="resetToTop"]) {
+ min-width: 16em;
+}
+[name="resetToTop"]{
+  width:max-content;
+}
+.x2 {
+ grid-template-columns: repeat(auto-fill, minmax(20em, 36em));
+ align-items:start;
+}
+.vip-edit-zone {
+ grid-row: 1/4;
+ display: grid;
+ gap:3.3rem;
+ margin-bottom:3.3rem;
+}

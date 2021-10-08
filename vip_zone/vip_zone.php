@@ -10,7 +10,7 @@
 			'AdminAuthTop',
             'AdminTopEndHead',
             'AdminUsersTop',
-			'AdminSettingsPluginsTop',
+			/*'AdminSettingsPluginsTop',*/
 			'ThemeEndHead',
 			'ThemeEndBody',
 			'plxShowStaticListEnd',
@@ -174,26 +174,6 @@
             echo self::END_CODE;
         } 
 		
-       #	do not use , only for test & note to the dev. Serait-ce utile ?
-        public function AdminSettingsPluginsTop() {	
-	    echo self::BEGIN_CODE;
-?>
-		/* ne pas decommenter. replacer le plugin dans la liste en passant par l'administration
-			$xmlplug = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'plugins.xml', true);
-			$topDoc ='<document>';
-			$topPlug= '	<plugin name="vip_zone" scope=""></plugin>';
-			$newxmlplug = str_replace($topPlug, '', $xmlplug);
-			$res = str_replace($topDoc, $topDoc.' '.$topPlug, $newxmlplug);		
-			$doc = simplexml_load_string($res);
-			$endres = new DOMDocument ();
-			$endres->preserveWhiteSpace = false;
-			$endres->formatOutput = true;
-			$endres->loadXML ( $doc->asXML() );
-			$endres->save(PLX_ROOT.PLX_CONFIG_PATH.'plugins.xml');
-		*/			 	 
-<?php
-            echo self::END_CODE;
-        }	
 
 		#Avant l'affichage de la page, on verifie si il y a besoin d'authenfication en comparant la configuration du plugin et le type de page demandée
         public function ThemeEndHead() {	
@@ -206,7 +186,7 @@
 	
 		  #Selon le mode privatisé, on redirige vers la page d'authenfication si par encore logué
 		  if($parameter =="catart") {
-		        if (!isset($_SESSION['profil']) && ($plxMotor->mode !== 'home' ) && ($plxMotor->mode !== 'static' ) && ($plxMotor->mode !== 'search' )) {
+		        if (!isset($_SESSION['profil']) && ($plxMotor->mode === 'categorie' ) || ($plxMotor->mode === 'article' )) {
 					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
 					header("Location: /core/admin/");
 					exit;
@@ -252,7 +232,7 @@
 ?>
 		$plxMotor = plxMotor::getInstance();
 		$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone'];		
-			 if ((isset($_SESSION['profil'])) && ($_SESSION['profil']=='5') ) { array_push($menus, '<li class="static menu noactive"  id="vip_logout"><a href="'.PLX_ROOT.'core/admin/auth.php?d=1&logout=1"  title="'.$plugin->getLang("L_VIP_LOGOUT_TITLE").'">'.$plugin->getLang("L_VIP_LOGOUT").'</a></li>');}
+			 if ((isset($_SESSION['profil'])) && ($_SESSION['profil']=='5') ) { array_push($menus, '<li class="static menu noactive"  id="vip_logout"><a href="'.PLX_ROOT.'core/admin/auth.php?d=1"  title="'.$plugin->getLang("L_VIP_LOGOUT_TITLE").'">'.$plugin->getLang("L_VIP_LOGOUT").'</a></li>');}
 
 			 if (!isset($_SESSION['profil'])) {
 				$menus = array(); 
@@ -370,6 +350,29 @@
 <?php
             echo self::END_CODE;
         }	
+		
+	# pas hook 
+       # repositionne le plugin en premiere position // utilise le formatage XML produit par PluXml
+	   /* aprés maj du fichier plugins.xml, les tags 
+	   
+	      <plugin name="non du plugin" scope=""></plugin>     sont réecris  
+		  <plugin name="non du plugin" scope=""/>             conformement à la sybtaxe XML 
+		  et sans provoquer de dysfonctionement de lecture dans PluXml .
+	   */
+        public function resetPluginsToTop() {	
+			$xmlplug = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'plugins.xml', true);
+			$topDoc ='<document>';
+			$topPlug= '	<plugin name="vip_zone" scope=""></plugin>';
+			$newxmlplug = str_replace($topPlug, '', $xmlplug);
+			$res = str_replace($topDoc, $topDoc.' '.$topPlug, $newxmlplug);		
+			$doc = simplexml_load_string($res);
+			$endres = new DOMDocument ();
+			$endres->preserveWhiteSpace = false;
+			$endres->formatOutput = true;
+			$endres->loadXML ( $doc->asXML() );
+			$endres->save(PLX_ROOT.PLX_CONFIG_PATH.'plugins.xml');
+        }	
+
 	#end class
     }
 ?> 

@@ -40,4 +40,6 @@ else {
 	header("location:".PLX_CORE."admin/parametres_plugin.php?p=vip_zone&upmsg=fail"); 
 	exit;
 }
+
+// note: fonction eventuellement à passer dans la class du plugin.
 ?>
