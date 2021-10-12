@@ -484,7 +484,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById('csv'), {
  function dl_CSV() {
 	let link = document.createElement("a");
 	link.download = "username.csv";
-	let blob = new Blob(["Login;Name;Passsword;Email\n"], {type: "text/csv"});
+	let blob = new Blob(["Login;Name;Passsword;Email;Infos\n"], {type: "text/csv"});
 	link.href = URL.createObjectURL(blob);
 	link.target="_blank"
 	link.click();
