@@ -4,9 +4,10 @@
  justify-content: center;
 }
 .grid-center legend:first-line,
-caption{
-  text-transform: uppercase;
-  color:blue;}
+.grid-center caption {
+ text-transform: uppercase;
+ color:blue;
+}
 .grid-center legend,
 caption {
  background: ivory;
@@ -14,6 +15,13 @@ caption {
  font-size: 1.3rem;
  white-space:wrap;
  color:inherit;
+ box-shadow:1px 1px 2px gray;
+ border-radius:3px;
+ padding:0 2px;
+}
+.grid-center caption {
+ width:max-content;
+ transform:translate(1em,0.6em)
 }
 code {
  background:#f7f7b4;
@@ -26,6 +34,10 @@ code {
  align-items: center;
  gap: 0.5em;
  max-width:80%;
+}
+option[disabled] {
+ background: #FBE8D9;
+ font-size:0.8em;
 }
 .gridx2 p.alert.red {
  width: max-content;
@@ -44,8 +56,12 @@ code {
  margin:auto;
  width:90%;
 }
+.vip-edit-zone form:first-of-type {
+ background:url(http://p587.gc/plugins/vip_zone/icon.png) top 2.2em left 0.7em no-repeat
+}
 .span2col th {
  text-align:right;
+ padding:0.75em 0.2em;
 }
 .span2col td {
  border-left:solid 1px lightgray;
@@ -109,9 +125,19 @@ form {
 .grid-center form {
  min-width: 360px;
 }
+.vip-edit-zone form:first-of-type label {
+ padding-left:3em;
+}
 .grid-center label {
  font-weight: bold;
  text-align: right;
+ width:16em;
+ max-width:40vw;
+}
+label.gridx2 {
+	max-width:max-content;
+  margin:auto;
+  width:auto;
 }
 .grid-center button {
  width: 16em;
@@ -120,8 +146,8 @@ form {
 .grid-center input:not([name="resetToTop"]) {
  min-width: 16em;
 }
-[name="resetToTop"]{
-  width:max-content;
+[name="resetToTop"] {
+ width:max-content;
 }
 .x2 {
  grid-template-columns: repeat(auto-fill, minmax(20em, 36em));

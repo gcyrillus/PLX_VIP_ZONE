@@ -1,6 +1,215 @@
-<?php if(!defined("PLX_ROOT")) exit; 
+<?php
+/*###################################################################################
+# Fichier configuration du Plugin VIP_ZONE pour   PluXml (Cette version est incompatible avec les versions 6 et + de PluXml)
+# Auteur : Gcyrillus aka Gc-Nomade
+# premiere version : Sept. 2021
+# Version :  1.08  / Oct. 2021
+# Dépot github : https://github.com/gcyrillus/PLX_VIP_ZONE
+# Options de configurations de Zone privatisée dans votre PluXml.
+# Aide Forum : https://forum.pluxml.org/discussion/7056/plugin-vip-zone-options-de-privatisation-de-votre-pluxml#latest
+###################################################################################*/ if(!defined("PLX_ROOT")) exit; 
 	$plxAdmin = plxAdmin::getInstance();
 	$plxMotor = plxMotor::getInstance();
+
+class SimpleXMLExtended extends SimpleXMLElement {
+// from https://web.archive.org/web/20110223233311/http://coffeerings.posterous.com/php-simplexml-and-cdata	
+  public function addCData($cdata_text) {
+    $node = dom_import_simplexml($this); 
+    $no   = $node->ownerDocument; 
+    $node->appendChild($no->createCDATASection($cdata_text)); 
+  } 
+}
+
+function updateFromCsv() {
+	$plxMotor = plxMotor::getInstance();
+	// on verfie que nos fichiers sont accessibles
+	if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS.'/vip_zone/username.csv', 'r')) !== FALSE) && (!isset($_GET['upmsg']))) {
+		
+		// on commence avec le fichier csv  
+		while (($data = fgetcsv($open, 1000, ";")) !== FALSE)     {        
+		  $array[] = $data; 
+		}  
+		fclose($open);
+
+		// on recupere le fichier XML
+		$xml = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'users.xml', true);
+
+		// on charge le fichier xml
+		$doc = new SimpleXMLExtended($xml); 
+		
+		// on compte ses enregistrements
+		$kids = $doc->children();
+		$nbUser = count($kids);
+		$nbRecords =0;
+		
+		 // on boucle sur les lignes du fichiers CSV pour récuperer les données et les ajouter aux données existantes 
+		foreach($array as $i => $line){ 
+		
+					$infoUser='';//par défaut
+				if($i >0) { // on passe la premiere ligne ou sont  stockées les entêtes de colonnes.
+					$nbRecords++; // on compte les enregistrements qui sont ajouter.
+					$nbUser++;
+					//test si données extraites
+					if((!isset($line[0])) or (!isset($line[1])) or (!isset($line[2])) or (!isset($line[3]))) {
+					$nbRecords++;
+					echo	'<p class="alert red "> '.$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang('L_ERROR_BATCH_RECORDS').': <b> '.$nbRecords  .'</b></p>';
+					 
+					$fileError ='1';
+
+					} 
+					else {
+					
+			 		// on alimente les données visiteur V.I.P..
+					$element = $doc->addChild('user'); 
+					$element->addAttribute('number', str_pad($nbUser, 3,'0', STR_PAD_LEFT)  );
+					$element->addAttribute('active', '1' );
+					$element->addAttribute('profil', '5' );
+					$element->addAttribute('delete', '0' );	 
+					
+					$login = $element->addChild('login'); 
+					$login->addCData($line[0]); 
+
+					$name = $element->addChild('name'); 
+					$name->addCData($line[1]); 
+
+				if(isset($line[4])) {$infoUser= $line[4];}
+					$infos = $element->addChild('infos'); 
+					$infos->addCData($infoUser); 
+
+					// grain de sel
+					$salt = plxUtils::charAleatoire(10);
+
+					//cryptage du mot de passe
+					$pwd=sha1($salt.md5($line[2]));			
+					
+					$password = $element->addChild('password'); 
+					$password->addCData($pwd); 
+					
+
+					$salted = $element->addChild('salt'); 
+					$salted->addCData($salt); 
+
+					$email = $element->addChild('email'); 
+					$email->addCData($line[3]); 
+
+					$lang = $element->addChild('lang'); 
+					$lang->addCData('fr'); 
+
+					$password_token = $element->addChild('password_token'); 
+					$password_token->addCData(''); 
+
+					$password_token_expiry = $element->addChild('password_token_expiry'); 
+					$password_token_expiry->addCData(''); 	
+					}			   
+			   }  
+		}
+				
+		if (!isset($fileError)) {
+			//On refait l'indentation du fichier  parceque c'est plus joli
+			$xmlDoc = new DOMDocument ();
+			$xmlDoc->preserveWhiteSpace = false;
+			$xmlDoc->formatOutput = true;
+			$xmlDoc->loadXML ( $doc->asXML() );
+			// on sauvegarde le fichier xml mis à jour.
+			$xmlDoc->save(PLX_ROOT.PLX_CONFIG_PATH.'users.xml');
+			echo '<p class="alert green ">'.L_SAVE_FILE_SUCCESSFULLY.' - '.L_CONFIG_USERS_NEW.' <b> '.$nbRecords  .'</b></p>';
+			
+			// on vide le fichier si tout s'est bien déroulé pour le prochain enregistrement.
+			$open = fopen(PLX_PLUGINS."/vip_zone/username.csv", "w") ;
+			$fileCsv="login;name;password;email;infos\n";
+			fwrite($open, $fileCsv);
+			fclose($open);
+		}
+
+	}
+	else {
+    exit(L_SAVE_FILE_ERROR.' user.xml / username.csv.');
+	}
+}
+
+function addVipStatic(){
+	    $plxMotor = plxMotor::getInstance();
+		$newVipStatic = $_POST["newVipStatic"]	;	
+		// on recupere le fichier XML
+		
+	#on verifie que l'on a accés au fichier de config
+	if (file_exists(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml')) {
+			$xml = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml', true) ;
+
+		// on charge le fichier xml
+		$doc = new SimpleXMLExtended($xml); 
+		
+		// on recherche le dernier numero et on l'incremente de 1 pour numeroter notre nouvelle page statique.
+			$searchMax = new SimpleXMLElement($xml);
+			$numbers= array();
+			foreach($searchMax->statique as $a => $b) {
+			   $numbers[]= (string)$b['number'];
+			}
+			sort($numbers);
+			$max=  array_pop($numbers);
+			$max= $max + 1 ;
+
+		// on alimente les données visiteur V.I.P..
+					$element = $doc->addChild('statique'); 
+					
+					
+					$element->addAttribute('number', str_pad($max, 3,'0', STR_PAD_LEFT)  );
+					$element->addAttribute('active', '0' );
+					$element->addAttribute('menu', 'oui' );
+					$element->addAttribute('url',  $_POST["newVipStatic"]  );	   
+					
+					$element->addAttribute('template', 'static.php' );
+					
+					$group = $element->addChild('group'); 
+					$group->addCData('V.I.P.'); 
+
+
+					$name = $element->addChild('name'); 
+					$name->addCData($_POST['newVipStatic']); 
+
+					$meta_description = $element->addChild('meta_description'); 
+					$meta_description->addCData(''); 
+	
+					
+					$title_htmltag = $element->addChild('title_htmltag'); 
+					$title_htmltag->addCData(''); 
+					
+
+					$date_creation = $element->addChild('date_creation'); 
+					$date_creation->addCData(date('YmdHi')); 
+
+					$date_update = $element->addChild('date_update'); 
+					$date_update->addCData(date('YmdHi')); 
+
+					$element = $element.'\n';	
+					
+					
+					$content="<?php if (!isset(\$_SESSION['profil']) ) {\$_SESSION['pageRequest'] = \$_SERVER['REQUEST_URI'] ; header(\"Location: /core/admin/\");} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");
+					
+					if (!file_exists(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php')) {
+						$open = fopen(PLX_ROOT.'data/statiques/'.str_pad($max, 3,'0', STR_PAD_LEFT).'.'.$_POST["newVipStatic"].'.php', 'w') ;
+						fwrite($open, $content);
+						fclose($open);
+					}
+	}			   
+
+				
+		if (!isset($fileError)) {
+			$xmlDoc = new DOMDocument ();
+			$xmlDoc->preserveWhiteSpace = false;
+			$xmlDoc->formatOutput = true;
+			$xmlDoc->loadXML ( $doc->asXML() );
+			// on sauvegarde le fichier xml mis à jour.
+			$xmlDoc->save(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml');
+			echo '<p class="alert green ">'.L_SAVE_FILE_SUCCESSFULLY.'</p>';
+		}	
+
+		else {
+			exit(L_SAVE_FILE_ERROR.' statiques.xml .');
+			}
+}	
+
+
 			
 	// configuation : fait un backup du fichier users.xml
 	if (!file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml.bak')) {
@@ -20,13 +229,13 @@
 	}
 		//maj du fichier username.csv		
 	if(!empty($_GET['ploc'])) {	  
-	if(!empty($_POST['csv'])) {	 
+		if(!empty($_POST['csv'])) {	 
 
-		$fileupdate = fopen(PLX_PLUGINS.$plugin."/username.csv", "w")  ;
-		fwrite($fileupdate, $_POST['csv']);
-		$fileCsv=$_POST['csv'];
-		fclose($fileupdate); 	
-	}  
+			$fileupdate = fopen(PLX_PLUGINS.$plugin."/username.csv", "w")  ;
+			fwrite($fileupdate, $_POST['csv']);
+			$fileCsv=$_POST['csv'];
+			fclose($fileupdate); 	
+		}  
 	updateFromCsv(); 
   }
  
@@ -67,7 +276,7 @@ if (file_exists(PLX_PLUGINS.$plugin."/username.csv")) {
 }
 else {
 	$open = fopen(PLX_PLUGINS.$plugin."/username.csv", "w") ;
-	$fileCsv="login;name;password;email\n";
+	$fileCsv="login;name;password;email;infos\n";
 	fwrite($open, $fileCsv);
 	fclose($open);
 }
@@ -214,7 +423,6 @@ if ($firstKey !=='vip_zone') {echo '
 }	# fin formulaire débogage
 
 	# infos configurations du plugins
-	
 
 			$nbVIP = '0';					
 			$nbactVIP = '0';		
@@ -238,7 +446,7 @@ echo '
 				</tr>
 				<tr>
 					<th>'.$plxPlugin->getLang("L_NBR_REGISTERED_ACTIVE_VIP").'</th>
-					<td>'.$nbVIP.'</td>
+					<td>'.$nbactVIP.'</td>
 				</tr>
 				<tr>
 					<th>'.$plxPlugin->getLang("L_CLASS_FOR_BODY").'</th>
@@ -265,207 +473,7 @@ echo '
 	</footer>
 	';	
 ?></div><!-- zone de repli code -->
-<?php
-class SimpleXMLExtended extends SimpleXMLElement {
-// from https://web.archive.org/web/20110223233311/http://coffeerings.posterous.com/php-simplexml-and-cdata	
-  public function addCData($cdata_text) {
-    $node = dom_import_simplexml($this); 
-    $no   = $node->ownerDocument; 
-    $node->appendChild($no->createCDATASection($cdata_text)); 
-  } 
-}
 
-function updateFromCsv() {
-	$plxMotor = plxMotor::getInstance();
-	// on verfie que nos fichiers sont accessibles
-	if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS.'/vip_zone/username.csv', 'r')) !== FALSE) && (!isset($_GET['upmsg']))) {
-		
-		// on commence avec le fichier csv  
-		while (($data = fgetcsv($open, 1000, ";")) !== FALSE)     {        
-		  $array[] = $data; 
-		}  
-		fclose($open);
-
-		// on recupere le fichier XML
-		$xml = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'users.xml', true);
-
-		// on charge le fichier xml
-		$doc = new SimpleXMLExtended($xml); 
-		
-		// on compte ses enregistrements
-		$kids = $doc->children();
-		$nbUser = count($kids);
-		$nbRecords =0;
-
-		 // on boucle sur les lignes du fichiers CSV pour récuperer les données et les ajouter aux données existantes 
-		foreach($array as $i => $line){ 
-				if($i >0) { // on passe la premiere ligne ou sont  stockées les entêtes de colonnes.
-					$nbRecords++; // on compte les enregistrements qui sont ajouter.
-					$nbUser++;
-					//test si données extraites
-					if((!isset($line[0])) or (!isset($line[1])) or (!isset($line[2])) or (!isset($line[3]))) {
-					$nbRecords++;
-					echo	'<p class="alert red "> '.$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang('L_ERROR_BATCH_RECORDS').': <b> '.$nbRecords  .'</b></p>';
-					 
-					$fileError ='1';
-
-					} 
-					else {
-					
-			 		// on alimente les données visiteur V.I.P..
-					$element = $doc->addChild('user'); 
-					$element->addAttribute('number', str_pad($nbUser, 3,'0', STR_PAD_LEFT)  );
-					$element->addAttribute('active', '1' );
-					$element->addAttribute('profil', '5' );
-					$element->addAttribute('delete', '0' );	 
-					
-					$login = $element->addChild('login'); 
-					$login->addCData($line[0]); 
-
-					$name = $element->addChild('name'); 
-					$name->addCData($line[1]); 
-
-					$infos = $element->addChild('infos'); 
-					$infos->addCData(''); 
-
-					// grain de sel
-					$salt = plxUtils::charAleatoire(10);
-
-					//cryptage du mot de passe
-					$pwd=sha1($salt.md5($line[2]));			
-					
-					$password = $element->addChild('password'); 
-					$password->addCData($pwd); 
-					
-
-					$salted = $element->addChild('salt'); 
-					$salted->addCData($salt); 
-
-					$email = $element->addChild('email'); 
-					$email->addCData($line[3]); 
-
-					$lang = $element->addChild('lang'); 
-					$lang->addCData('fr'); 
-
-					$password_token = $element->addChild('password_token'); 
-					$password_token->addCData(''); 
-
-					$password_token_expiry = $element->addChild('password_token_expiry'); 
-					$password_token_expiry->addCData(''); 	
-					}			   
-			   }  
-		}
-				
-		if (!isset($fileError)) {
-			//On refait l'indentation du fichier  parceque c'est plus joli
-			$xmlDoc = new DOMDocument ();
-			$xmlDoc->preserveWhiteSpace = false;
-			$xmlDoc->formatOutput = true;
-			$xmlDoc->loadXML ( $doc->asXML() );
-			// on sauvegarde le fichier xml mis à jour.
-			$xmlDoc->save(PLX_ROOT.PLX_CONFIG_PATH.'users.xml');
-			echo '<p class="alert green ">'.L_SAVE_FILE_SUCCESSFULLY.' - '.L_CONFIG_USERS_NEW.' <b> '.$nbRecords  .'</b></p>';
-			
-			// on vide le fichier si tout s'est bien déroulé pour le prochain enregistrement.
-			$open = fopen(PLX_PLUGINS."/vip_zone/username.csv", "w") ;
-			$fileCsv="login;name;password;email\n";
-			fwrite($open, $fileCsv);
-			fclose($open);
-		}
-
-	}
-	else {
-    exit(L_SAVE_FILE_ERROR.' user.xml / username.csv.');
-	}
-}
-
-function addVipStatic(){
-	    $plxMotor = plxMotor::getInstance();
-$newVipStatic = $_POST["newVipStatic"]	;	
-		// on recupere le fichier XML
-		
-	#on verifie que l'on a accés au fichier de config
-	if (file_exists(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml')) {
-			$xml = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml', true) ;
-
-		// on charge le fichier xml
-		$doc = new SimpleXMLExtended($xml); 
-		
-		// on recherche le dernier numero et on l'incremente de 1 pour numeroter notre nouvelle page statique.
-			$searchMax = new SimpleXMLElement($xml);
-			$numbers= array();
-			foreach($searchMax->statique as $a => $b) {
-			   $numbers[]= (string)$b['number'];
-			}
-			sort($numbers);
-			$max=  array_pop($numbers);
-			$max= $max + 1 ;
-
-		// on alimente les données visiteur V.I.P..
-					$element = $doc->addChild('statique'); 
-					
-					
-					$element->addAttribute('number', str_pad($max, 3,'0', STR_PAD_LEFT)  );
-					$element->addAttribute('active', '0' );
-					$element->addAttribute('menu', 'oui' );
-					$element->addAttribute('url',  $_POST["newVipStatic"]  );	   
-					
-					$element->addAttribute('template', 'static.php' );
-					
-					$group = $element->addChild('group'); 
-					$group->addCData('V.I.P.'); 
-
-
-					$name = $element->addChild('name'); 
-					$name->addCData($_POST['newVipStatic']); 
-
-					$meta_description = $element->addChild('meta_description'); 
-					$meta_description->addCData(''); 
-	
-					
-					$title_htmltag = $element->addChild('title_htmltag'); 
-					$title_htmltag->addCData(''); 
-					
-
-					$date_creation = $element->addChild('date_creation'); 
-					$date_creation->addCData(date('YmdHi')); 
-
-					$date_update = $element->addChild('date_update'); 
-					$date_update->addCData(date('YmdHi')); 
-
-					$element = $element.'\n';	
-					
-					
-					$content="<?php if (!isset(\$_SESSION['profil']) ) {\$_SESSION['pageRequest'] = \$_SERVER['REQUEST_URI'] ; header(\"Location: /core/admin/\");} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");
-					
-					if (!file_exists(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php')) {
-					/*if  (@($open = fopen(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php', "r")) !== FALSE) {
-						//okay pas de doublon ... en principe
-					}
-					else {*/
-						$open = fopen(PLX_ROOT.'data/statiques/'.str_pad($nbUser, 3,'0', STR_PAD_LEFT).'.'.$_POST["newVipStatic"].'.php', 'w') ;
-						fwrite($open, $content);
-						fclose($open);
-					}
-					}			   
-
-				
-		if (!isset($fileError)) {
-			$xmlDoc = new DOMDocument ();
-			$xmlDoc->preserveWhiteSpace = false;
-			$xmlDoc->formatOutput = true;
-			$xmlDoc->loadXML ( $doc->asXML() );
-			// on sauvegarde le fichier xml mis à jour.
-			$xmlDoc->save(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml');
-			echo '<p class="alert green ">'.L_SAVE_FILE_SUCCESSFULLY.'</p>';
-		}	
-
-		else {
-			exit(L_SAVE_FILE_ERROR.' statiques.xml .');
-			}
-}	
-
-?>
 <!-- code mirror -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/codemirror.min.css" integrity="sha512-6sALqOPMrNSc+1p5xOhPwGIzs6kIlST+9oGWlI4Wwcbj1saaX9J3uzO3Vub016dmHV7hM+bMi/rfXLiF5DNIZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/codemirror.min.js" integrity="sha512-Mq3vhmcyngWQdBzrOf0SA5p9O3WePmAFfsewXSy5v3BzreKxO4WNzIYa9MyWTNBWTjERTNrU5dBnqbEKIl/4dA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -484,7 +492,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById('csv'), {
  function dl_CSV() {
 	let link = document.createElement("a");
 	link.download = "username.csv";
-	let blob = new Blob(["Login;Name;Passsword;Email;Infos\n"], {type: "text/csv"});
+	let blob = new Blob(["Login;Name;Passsword;Email;infos\n"], {type: "text/csv"});
 	link.href = URL.createObjectURL(blob);
 	link.target="_blank"
 	link.click();

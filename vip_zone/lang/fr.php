@@ -19,7 +19,7 @@ $LANG = array (
 		'L_UNSET_PRIVATE_ZONE_BLOG_TO_NONE' 	=> 'configuration blog incompatible,<br> selectonnez un autre mode.',
 		'L_UNSET_PRIVATE_ZONE_STATIC_TO_NONE' 	=> 'configuration statique incompatible,<br> selectonnez un autre mode.',
 		
-		'L_NEW_STATIC_VIP'						=> 'Créer une page Statique privée',
+		'L_NEW_STATIC_VIP'						=> 'Créez une page Statique privée',
 		'L_DO_UPDATE_NEW_VIP_STAT'				=> 'Pour editer et activer la nouvelle page statique privatisée, rendez vous à:',
 		'L_NOT_FIRST_LINE'						=> 'Ne pas éditer ni enlever la premiere ligne de code, l\'édition de votre page statique commence ici.',
 		

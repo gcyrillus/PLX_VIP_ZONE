@@ -1,4 +1,13 @@
 <?php
+/*###################################################################################
+# Plugin PluXml (Cette version est incompatible avec les versions 6 et + de PluXml)
+# Auteur : Gcyrillus aka Gc-Nomade
+# premiere version : Sept. 2021
+# Version :  1.08  / Oct. 2021
+# Dépot github : https://github.com/gcyrillus/PLX_VIP_ZONE
+# Options de configurations de Zone privatisée dans votre PluXml.
+# Aide Forum : https://forum.pluxml.org/discussion/7056/plugin-vip-zone-options-de-privatisation-de-votre-pluxml#latest
+###################################################################################*/
     if(!defined('PLX_ROOT')) {
         die('oups!');
     }
@@ -10,7 +19,6 @@
 			'AdminAuthTop',
             'AdminTopEndHead',
             'AdminUsersTop',
-			/*'AdminSettingsPluginsTop',*/
 			'ThemeEndHead',
 			'ThemeEndBody',
 			'plxShowStaticListEnd',
@@ -33,7 +41,7 @@
 			
 		# droits pour accéder à la page config.php et admin.php du plugin
 		$this->setConfigProfil(PROFIL_ADMIN);
-		$this->setAdminProfil(PROFIL_ADMIN);
+		$this->setAdminProfil( PROFIL_ADMIN);
         }
 		
 	
@@ -355,14 +363,14 @@
        # repositionne le plugin en premiere position // utilise le formatage XML produit par PluXml
 	   /* aprés maj du fichier plugins.xml, les tags 
 	   
-	      <plugin name="non du plugin" scope=""></plugin>     sont réecris  
-		  <plugin name="non du plugin" scope=""/>             conformement à la sybtaxe XML 
-		  et sans provoquer de dysfonctionement de lecture dans PluXml .
+	      <plugin name="non du plugin" scope=""></plugin>     sont réecris en
+		  <plugin name="non du plugin" scope=""/>             conformement à la syntaxe XML 
+		  sans provoquer de dysfonctionement de lecture dans PluXml .
 	   */
         public function resetPluginsToTop() {	
 			$xmlplug = file_get_contents(PLX_ROOT.PLX_CONFIG_PATH.'plugins.xml', true);
 			$topDoc ='<document>';
-			$topPlug= '	<plugin name="vip_zone" scope=""></plugin>';
+			$topPlug= '	<plugin name="vip_zone" scope=""></plugin>';//recherche sur syntaxe produite par PluXml
 			$newxmlplug = str_replace($topPlug, '', $xmlplug);
 			$res = str_replace($topDoc, $topDoc.' '.$topPlug, $newxmlplug);		
 			$doc = simplexml_load_string($res);
