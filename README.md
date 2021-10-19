@@ -19,7 +19,7 @@ Le plugin vous permet de choisir entre plusieurs configuration d'espaces V.I.P.,
    * les pages Catégories et Articles ,
    * les pages Statiques
    * ou désactiver tout les espaces privée en sélectionnant Aucune (valeur par défaut à l'activation du plugin)
-   * Il y a aussi la possibilité de créer uniquement des pages statiques privée dans un group dédié.
+   * Il y a aussi la possibilité de créer uniquement des pages statiques privée dans un groupe dédié.
 
 ## Traitement par lot de nouveaux utilisateurs V.I.P.
 
