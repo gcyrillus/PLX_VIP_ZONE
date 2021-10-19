@@ -2,13 +2,13 @@
 $LANG = array (
 
 
-		# parametres_users.php
+		# config.php
 		'L_PROFIL_VISITOR' 						=> 'VIP' ,
 		'L_LOAD_VIP_POSITION'					=> 'Plugin loading position',
 		'L_LOAD_VIP_FIRST'						=> 'Load the plugin before any other.',
-		'L_LOAD_VIP_WARNING'					=> 'To use if other plugins are dysfunctionning',
+		'L_LOAD_VIP_WARNING'					=> 'To use if other plugins are dysfunctionning while Statics Pages mode is set.',
 		
-		# config.php
+
 		'L_VIP_ZONE_SELECTION'	 				=> 'Select the VIP Zone',
 		'L_VIP_ZONE_PRIVATIZED'					=> 'Privatized zone',
 		'L_ZONE_NONE2' 							=> 'none',

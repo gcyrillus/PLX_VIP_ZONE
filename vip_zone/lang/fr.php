@@ -1,14 +1,13 @@
 <?php
 $LANG = array (
 
-
-		# parametres_users.php
+		# config.php
 		'L_PROFIL_VISITOR' 						=> 'VIP' ,
 		'L_LOAD_VIP_POSITION'					=>'Position de chargement du plugin',
 		'L_LOAD_VIP_FIRST'						=> 'Charger ce plugin avant les autres.',
-		'L_LOAD_VIP_WARNING'					=> 'A utiliser en cas de dysfonctionnement d\'autres plugins',
+		'L_LOAD_VIP_WARNING'					=> 'A utiliser en cas de dysfonctionnement d\'autres plugins en configuration "Pages Statiques"',
 		
-		# config.php
+
 		'L_VIP_ZONE_SELECTION'	 				=> 'Selectionnez l\'espace VIP',
 		'L_VIP_ZONE_PRIVATIZED'					=> 'Espace privatisé',
 		'L_ZONE_NONE2' 							=> 'Aucune',
