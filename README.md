@@ -1,5 +1,5 @@
 # PLX_VIP_ZONE <sup><sub>intitulé *Espace Privé* </sub></sup>
-Plugin pour PluXml , ajoute la gestion d'espace privé ,blog,catégories ét articles ou pages statiques aux choix, inspiré du précédent squelette: https://github.com/gcyrillus/plx-log-visitor
+Plugin pour PluXml , ajoute la gestion d'espace privé ,blog,catégories et articles ou pages statiques aux choix, inspiré du précédent squelette: https://github.com/gcyrillus/plx-log-visitor
 
 **Le plugin "Espace Privée" permet de rendre tout ou partie de votre site accessible uniquement à des utilisateurs bénéficiant d'un accès V.I.P..**
 
@@ -23,18 +23,18 @@ Le plugin vous permet de choisir entre plusieurs configuration d'espaces V.I.P.,
 
 ## Traitement par lot de nouveaux utilisateurs V.I.P.
 
-Le traitement par lot s'effectue sur la structure d'un fichier au format CSV, ce type de fichier peut-être ouvert et éditer avec de nombreux éditeurs de texte ou de feuille de calcul. Les 2 programmes plus connus du grand publics sont Excel(MS) et OpenOffice calc. Le caractéres de séparation des champs utilisé est le point virgule `;`.
+Le traitement par lot s'effectue sur la structure d'un fichier au format CSV, ce type de fichier peut-être ouvert et éditer avec de nombreux éditeurs de texte ou de feuille de calcul. Les 2 programmes plus connus du grand publics sont Excel(MS) et OpenOffice calc. Le caractères de séparation des champs utilisé est le point virgule `;`.
 
 Vous pouvez:
-   1.  Télécharger le fichier ***username.csv*** et l’éditer dans votre programme favori en ajoutant vos utilisateurs **ligne par ligne** et en respectant **les colonnes** et son format (caractére de champ `;`), puis en le renvoyant sur le serveur. <up>Un lien de téléchargement est affiché dans la page de configuration.</sup>
+   1.  Télécharger le fichier ***username.csv*** et l’éditer dans votre programme favori en ajoutant vos utilisateurs **ligne par ligne** et en respectant **les colonnes** et son format (caractère de champ `;`), puis en le renvoyant sur le serveur. <up>Un lien de téléchargement est affiché dans la page de configuration.</sup>
    2.  Renvoyer sur le serveur le fichier modifié , il sera traité automatiquement puis vidé.
-   3.  Directement dans la page *configuration*  du plugin dans l'editeur affiché en respectant la syntaxe des entêtes en première ligne ,  **ligne par ligne**  en séparant chaque champs (au nombre de quatre) d'une double virgule  <kbd>**;**</kbd> en faisant la saisie au clavier. <sup><sub>(l'editeur embarque https://github.com/codemirror pour rendre l'édition en ligne plus confortable)</sup></sup>
+   3.  Directement dans la page *configuration*  du plugin dans l’éditeur affiché en respectant la syntaxe des entêtes en première ligne ,  **ligne par ligne**  en séparant chaque champs (au nombre de quatre) d'une double virgule  <kbd>**;**</kbd> en faisant la saisie au clavier. <sup><sub>(l’éditeur embarque https://github.com/codemirror pour rendre l'édition en ligne plus confortable)</sup></sup>
 
-  **Note** . <del>Le plugin ne vérifie pas les doublons ni la validité des adresses mails</del> En cas de doublon, un message s'affiche indiquant le champ et la ligne à corrigé.
+  **Note** .  En cas de doublon, un message s'affiche indiquant le champ et la ligne à corrigé.
 
 ## résumé et info à propos de l'édition 'Ajout utilisateurs'
 
-   1.  Conservez les entêtes de la première ligne du fichier CSV:  `Login;Name;Password;Email` . Cette ligne n'est pas enregistrée comme Utilisateur mais vous rappelle la syntaxe à respecter.
+   1.  Conservez les entêtes de la première ligne du fichier CSV:  `Login; Name; Password; Email; Infos` . Cette ligne n'est pas enregistrée comme Utilisateur mais vous rappelle la syntaxe à respecter.
    2.  Il y a quatre champs séparés par un point virgule, ces champs vont créer les utilisateurs avec leur adresse mail et mot de passe respectif .
    3.  Le mot de passe sera crypté à l'enregistrement, si il est perdu par l'utilisateur et selon la configuration native de votre PluXml, son adresse mail si valide pourra lui servir à en créer un nouveau.
    4.  L'enregistrement ne gère pas les doublons, mais ne finalisera pas un traitement en lot si une ligne est incomplète ou comporte une erreur de syntaxe, *le n° de lignes est alors indiqué* .
@@ -50,17 +50,17 @@ Vous pouvez:
    14.  Ajout de page statique privatisée dans un groupe (VIP). <br>Pour utiliser ces pages , il faut les éditer dans la page d'administration "pages statiques" et les activer pour les finaliser et les afficher sur le site.
    15.  A la désactivation du plugin , les pages statiques privées du groupe <b>VIP</b>  sont aussi désactivées.
    16.  A l'activation du plugin, si des pages statiques privatisées dans le groupe <b>VIP</b> existent, elles sont réactivées.
-   17. Ajout du champs infos dans la gestion via le fichier CSV (ou edition nouvelle utilisateur dans la page configuration).
-   18. Verification des doublons sur les champs login, name et email.
-   19. option de repositionement du plugin en premiere position au chargements des plugins d'un simple clique.
+   17. Ajout du champs infos dans la gestion via le fichier CSV (ou édition nouvelle utilisateur dans la page configuration).
+   18. Vérification des doublons sur les champs login, name et email.
+   19. option de repositionnement du plugin en première position au chargements des plugins d'un simple clique.
 
 ___
 
 ### Note à l'installation et sa position dans la page d'administration des plugins. 
 Selon l'ordre du plugin dans la page `http://votrePluXml.com/core/admin/parametres_plugins.php`  si vous utilisez un autre plugin , comme ***MySearch: moteur de recherche***, qui s'ajoute en lien dans le menu,ce type de plugin sera considéré comme une page statique et sera privatisé si l'option de configuration est calé sur ***Pages Statiques*** .
- Pour garder les pages de ce type de plugin en accès libre, il faut que le plugin `vip_zone , intitulé *'Espace Privée'* soit placé devant. A défaut, tous les plugins placés derrière et se greffant au menu seront considérés comme des pages statiques privatisables et accéssible seulement aprés connexion.
+ Pour garder les pages de ce type de plugin en accès libre, il faut que le plugin `vip_zone , intitulé *'Espace Privée'* soit placé devant. A défaut, tous les plugins placés derrière et se greffant au menu seront considérés comme des pages statiques privatisables et accessibles seulement après connexion.
 
-Pour replacer le plugin en amont de vos autre plugins, un glisser/déposer suffit ou bien indiquez le numéro de position **-1** pour le remettre en tête de liste,. En fin, sauvegardez la modification de la liste des plugins. **Vous pouvez repassé le plugin en premiere position dans la page de configuration/administration du plugin.
+Pour replacer le plugin en amont de vos autre plugins, un glisser/déposer suffit ou bien indiquez le numéro de position **-1** pour le remettre en tête de liste,. En fin, sauvegardez la modification de la liste des plugins. **Vous pouvez repassé le plugin en première position dans la page de configuration/administration du plugin.
 
 
 ___
