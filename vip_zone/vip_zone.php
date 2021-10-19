@@ -194,7 +194,7 @@
 	
 		  #Selon le mode privatisé, on redirige vers la page d'authenfication si par encore logué
 		  if($parameter =="catart") {
-		        if (!isset($_SESSION['profil']) && ($plxMotor->mode === 'categorie' ) || ($plxMotor->mode === 'article' )) {
+		        if (!isset($_SESSION['profil']) && (($plxMotor->mode === 'categorie' ) || ($plxMotor->mode === 'article' ))) {
 					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
 					header("Location: /core/admin/");
 					exit;

@@ -24,6 +24,19 @@ function updateFromCsv() {
 	$plxMotor = plxMotor::getInstance();
 	// on verfie que nos fichiers sont accessibles
 	if ((file_exists(PLX_ROOT.PLX_CONFIG_PATH.'users.xml')) && (($open = fopen(PLX_PLUGINS.'/vip_zone/username.csv', 'r')) !== FALSE) && (!isset($_GET['upmsg']))) {
+		//les fichiers existent
+		
+		//préparation des tableaux  verification des doublons 
+		$loginUser=array();
+		$nameUser= array();
+		$mailUser= array();
+		// alimentation des tableaux avec user déjà existantes
+		$userLoop  = $plxMotor->aUsers; foreach($userLoop as $nb => $num ){  
+		$loginUser[]=$num['login'] ;
+		$nameUser[]= $num['name'] ;
+		$mailUser[]= $num['email'] ;
+		//Les tableaux seront alimentés aux cours des verifications de doublons.
+		}
 		
 		// on commence avec le fichier csv  
 		while (($data = fgetcsv($open, 1000, ";")) !== FALSE)     {        
@@ -58,6 +71,8 @@ function updateFromCsv() {
 
 					} 
 					else {
+						
+					// on verifie les doublons sur login, name et email
 					
 			 		// on alimente les données visiteur V.I.P..
 					$element = $doc->addChild('user'); 
@@ -66,12 +81,24 @@ function updateFromCsv() {
 					$element->addAttribute('profil', '5' );
 					$element->addAttribute('delete', '0' );	 
 					
-					$login = $element->addChild('login'); 
-					$login->addCData($line[0]); 
-
-					$name = $element->addChild('name'); 
-					$name->addCData($line[1]); 
-
+					if (in_array( $line[0], $loginUser)) {// verif doublon 
+						echo	'<p class="alert red "> '.L_ERR_LOGIN_ALREADY_EXISTS.$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang('L_ON_LINE').': <b> '.$nbRecords  .'</b></p>';
+						$fileError ='1';						
+					} else {
+						$loginUser[]=$line[0];	
+						$login = $element->addChild('login'); 
+						$login->addCData($line[0]); 					
+					}
+					if (in_array( $line[1], $nameUser)) {// verif doublon
+						echo	'<p class="alert red "> '.L_ERR_USERNAME_ALREADY_EXISTS.$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang('L_ON_LINE').': <b> '.$nbRecords  .'</b></p>';
+						$fileError ='1';						
+					} else {
+						$nameUser[]=$line[1];
+						$name = $element->addChild('name'); 
+						$name->addCData($line[1]); 
+					}
+					
+					
 				if(isset($line[4])) {$infoUser= $line[4];}
 					$infos = $element->addChild('infos'); 
 					$infos->addCData($infoUser); 
@@ -88,9 +115,23 @@ function updateFromCsv() {
 
 					$salted = $element->addChild('salt'); 
 					$salted->addCData($salt); 
+					
+					
+					if(trim($line[3])!='' AND !plxUtils::checkMail(trim($line[3]))){ // verif format email
+						echo	'<p class="alert red "> '.L_ERR_INVALID_EMAIL.': <b> '.$nbRecords  .'</b></p>'; 
+					$fileError ='1';
+					}
+					
+					if (in_array( $line[3], $mailUser)) {// verif doublon
+						echo	'<p class="alert red "> '.L_ERR_EMAIL_ALREADY_EXISTS.$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang('L_ON_LINE').': <b> '.$nbRecords  .'</b></p>';
+						$fileError ='1';						
+					} else {
+						$mailUser[]=$line[3];
+						$email = $element->addChild('email'); 
+						$email->addCData($line[3]); 
+					}
 
-					$email = $element->addChild('email'); 
-					$email->addCData($line[3]); 
+
 
 					$lang = $element->addChild('lang'); 
 					$lang->addCData('fr'); 
@@ -288,32 +329,29 @@ else {
     	$configZone = $plxPlugin->getParam('privatize');
 		#message d'alert , devrait ne jamais s'afficher . Situation en principe gerer en amont sur le formulaire en désactivant les config incompatibles.
 		$messageZone='';
-
 		#selectionne le parametre active
 			if($configZone =="none")   {$none=" selected "  ;}   					else {$none=""  ;}
 			if($configZone =="catart") {$catart=" selected ";}   					else {$catart="";}
 			if($configZone =="blog")   {$blog=" selected "  ; $static="disabled ";} else {$blog=""  ;} 
 			if($configZone =="static") {$static=" selected "; $blog="disabled";   } else {$static="";}
 			if(empty($plxMotor->aConf['homestatic'])) {$blog="disabled"; }
+			if(isset($plxMotor->aStats[$plxMotor->aConf['homestatic']]) and ($plxMotor->aStats[$plxMotor->aConf['homestatic']]['active']) =='1') {$static="disabled"; }
 			
-        if (isset($plxMotor->aStats[$plxMotor->aConf['homestatic']]) and $configZone =="static") { 
+        if ( isset($plxMotor->aStats[$plxMotor->aConf['homestatic']])  and $plxMotor->aStats[$plxMotor->aConf['homestatic']]['active'] =='1' and $configZone =="static") { 
 			$static="disabled ";
 			$messageZone = "L_UNSET_PRIVATE_ZONE_STATIC_TO_NONE";
 			$plxPlugin->setParam('privatize', 'none', 'cdata');
 			$plxPlugin->saveParams(); 
 		}		
-		else if ((empty($plxMotor->aConf['homestatic'] ) and $configZone =="blog")) {
+		else if (empty($plxMotor->aConf['homestatic'] )  and $configZone =="blog") {
 			$blog="disabled"; 
+			$static="";
 			$messageZone = "L_UNSET_PRIVATE_ZONE_BLOG_TO_NONE";
 			$plxPlugin->setParam('privatize', 'none', 'cdata');
-			$plxPlugin->saveParams();			
-			
+			$plxPlugin->saveParams();	
 		}
-	?>
-		
-		
+	?>		
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" media="screen"/>
-
 	<div  class="grid-center x2">
 		<div class="vip-edit-zone">
 			<form action="" method="post">
@@ -356,7 +394,7 @@ else {
 								let name = arr[i];
 								if (name == value) {
 									ipt.value= prompt('<?php echo L_ERR_STATIC_ALREADY_EXISTS ; ?> : ' + ipt.value +' \n\n<?php echo L_MEDIAS_NEW_NAME .':' ;  ?>');
-									checkValue(ipt.value, arr);// juste au cas c'est pas clair
+									checkValue(ipt.value, arr);// juste au cas où c'est pas clair
 									break;
 								}
 							}
@@ -407,7 +445,7 @@ else {
 	$plugPos =  (array)$plxMotor->plxPlugins->aPlugins;
 	foreach($plugPos as $key => $value) {
 		$firstKey = $key;
-		break;// on ne veut que la premiere.
+		break;// on ne veut que la premiere clé.
 	}
 
 if ($firstKey !=='vip_zone') {echo '
@@ -423,12 +461,11 @@ if ($firstKey !=='vip_zone') {echo '
 }	# fin formulaire débogage
 
 	# infos configurations du plugins
-
 			$nbVIP = '0';					
 			$nbactVIP = '0';		
 			$nbStatVIP = '0';		
 			foreach($plxAdmin->aUsers as $users) {
-				if ($users['profil']=='5') {$nbVIP++;}
+				if ( $users['profil']=='5') 							{$nbVIP++;}
 				if (($users['profil']=='5') && ($users['active']=='1')) {$nbactVIP++;}
 			}			
 			foreach($plxAdmin->aStats as $statpage) {

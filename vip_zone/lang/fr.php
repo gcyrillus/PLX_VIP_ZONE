@@ -40,6 +40,7 @@ $LANG = array (
 		'L_ERROR_BATCH_RECORDS'					=> 'Format enregistrement utilisateur incorrect à la ligne (champ manquant):'	,
 		'L_UPDATE_USERS_SUCCESSFUL'				=> 'Mise à jour des données effectuée avec succès',
 		'L_DL_101_CSV_FILE' 					=> 'telecharger le fichier CSV  modéle.',
+		'L_ON_LINE'								=> ' à la ligne',
 		
 		'L_VIP_LOGOUT' 							=> 'Déconnexion',
 		'L_VIP_LOGOUT_TITLE' 					=> 'Se deconnecter de l\'espace V.I.P.',

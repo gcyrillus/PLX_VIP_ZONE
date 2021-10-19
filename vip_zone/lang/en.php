@@ -39,7 +39,8 @@ $LANG = array (
 		'L_BATCH_FILE_NAME_DIRECTORY' 			=> 'Name & Directory of the batch file records used',
 		'L_ERROR_BATCH_RECORDS'					=> 'Syntax error to fix on user record line (missing field):',
 		'L_UPDATE_USERS_SUCCESSFUL'				=> 'Data Update was succesfully saved',
-		'L_DL_101_CSV_FILE' 					=> 'download empty username.csv file',
+		'L_DL_101_CSV_FILE' 					=> 'download empty username.csv file',		
+		'L_ON_LINE'								=> ' on line ',
 				
 		'L_VIP_LOGOUT' 							=> 'Disconnect',
 		'L_VIP_LOGOUT_TITLE' 					=> 'Logout V.I.P.\'s session',

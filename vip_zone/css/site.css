@@ -11,6 +11,9 @@
 #top[class*="vip-mode-"]  
 
 .vip-mode-static .menu .vip-zone a:before,
+#top[class*="vip-mode-"] 
+
+.menu .menu .vip-zone a:before,
 .vip-mode-catart article.article header h2 a:before,
 .vip-mode-catart article.article .more a:before,
 .vip-mode-catart article.article ~ span a[title~="Fil"]:before,
