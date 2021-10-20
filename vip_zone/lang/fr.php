@@ -20,7 +20,7 @@ $LANG = array (
 		
 		'L_NEW_STATIC_VIP'						=> 'Créez une page Statique privée',
 		'L_DO_UPDATE_NEW_VIP_STAT'				=> 'Pour editer et activer la nouvelle page statique privatisée, rendez vous à:',
-		'L_NOT_FIRST_LINE'						=> 'Ne pas éditer ni enlever la premiere ligne de code, l\'édition de votre page statique commence ici.',
+		'L_NOT_FIRST_LINE'						=> 'Ne pas éditer ni enlever la  première ligne de code, l\'édition de votre page statique commence ici.',
 		
 		'L_BATCH_NEW_VIPS' 						=> 'Ajout par lot Utilisateur(s) VIP(s)',
 		'L_BATCH_FILE_DIRECTORY' 				=> 'Emplacement du fichier',
@@ -34,7 +34,7 @@ $LANG = array (
 		'L_CLASS_FOR_BODY'						=> '<code>class</code> hors connexion ajoutée à <code>body</code>',
 		
 		'L_USER_FILE' 							=> 'fichier configuration utilisateur(s)',
-		'L_BACKUP_USER_FILE_FIRST_INSTALL' 		=> 'backup du fichier utilisateur à la premiere activation du plugin',
+		'L_BACKUP_USER_FILE_FIRST_INSTALL' 		=> 'backup du fichier utilisateur à la  première activation du plugin',
 		'L_BATCH_FILE_NAME_DIRECTORY' 			=> 'Nom et emplacement du fichier CSV (enregistrement par lot)',
 		'L_ERROR_BATCH_RECORDS'					=> 'Format enregistrement utilisateur incorrect à la ligne (champ manquant):'	,
 		'L_UPDATE_USERS_SUCCESSFUL'				=> 'Mise à jour des données effectuée avec succès',

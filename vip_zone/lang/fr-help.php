@@ -51,17 +51,25 @@
 
   <h3>Prérequis</h3>
   <p><strong>Comme tout les plugins, dés l'activation il vous faut configurer votre plugin de façon à ce qu'il fonctionne entièrement.</strong></p>
-  <p>Le plugin à la première configuration va faire un backup de votre fichier utilisateurs <small>(user.xml => user.xml.back)</small> et crèer un fichier CSV <small>(username.csv dans le dossier du plugin)</small> avec ses entêtes, celui-ci vous permettra d'ajouter par lot des utilisateur VIP.<small>Voir plus bas pour le détail</small> </p>
+  <p>Au premier accès à la page de configuration, le plugin va automatiquement valider sa configuration en faisant un backup de votre fichier utilisateurs <small>(user.xml => user.xml.bak)</small> et crèer un fichier CSV <small>(username.csv dans le dossier du plugin)</small> avec ses entêtes, celui-ci vous permettra d'ajouter par lot des utilisateur VIP.<small>Voir plus bas pour le détail</small>.<br> Vous pouvez dés lors configurer vos zones privatisées ou créer des pages statiques individuelles privatisées. </p>
+  <p>&Agrave; la désacitvation du plugin, le plugin va désactivé, touts les utilisateurs VIP et les pages statiques individuelles VIP sans les effacer ni toucher aux fichiers <code>users.xml</code> et <code>users.xml.bak</code>.</p>
+  <p>&Agrave; l'activation ou réactivation du plugin, le plugin va activé, si il y a, tous les utilisateurs VIP et pages statiques individuelles VIP qu'il trouvera.</p>
+  
   <h3>Configuration</h3>
   <p>Le plugin vous permet de choisir entre plusieurs configuration d'espaces V.I.P., Vous pouvez opter pour rendre privé:</p>
   <ol>
-    <li> l'espace <b>Blog</b>, si votre page d’accueil est une page statique <b><small> sinon c'est votre page d'acceuil! ;) </small></b>,</li>
-    <li> les pages <b>Catégories et Articles</b> ,</li>
-    <li> les pages <b>Statiques</b> </li>
-    <li>ou désactiver tout les espaces privée en sélectionnant <b>Aucune</b> <small>(valeur par défaut à l'activation du plugin)</small></li>
-    <li>Une ou plusieurs <b>page statique spécifique</b>.</li>
+    <li> l'espace <b>Blog</b>, si votre page d’accueil est une page statique </b>.</li>
+    <li> les pages <b>Catégories et Articles</b>.</li>
+    <li> les pages <b>Statiques</b>. </li>
+    <li>ou désactiver tout les espaces privée en sélectionnant <b>Aucune</b> <small>(valeur par défaut à l'activation du plugin)</small>.</li>
+    <li>Une ou plusieurs <b>page statique spécifique</b> que vous pourrez éditer et activer dans l'administration à l'onglet <a href="/core/admin/statiques.php">Pages Statiques</a>.</li>
   </ol>.</p>
 
+  <h3>&Eacute;dition d'une pages statique privatisée.</h3>
+  <p>La création d'une page statique privée la relie au groupe de pages VIP, ou elles se trouveront toutes. Dans le thème par défaut de PluXml, cela génere un sous menu déroulant au menu principal intitulé VIP.</p>
+  <p>&Agrave; la création , ces pages sont inactives et contienne le script nécessitant l'authentification pour qu'un visiteur puisse y accéder.Dans la page d'édition <a href="/core/admin/statiques.php">Pages Statiques</a>, ne touchez pas à cette portion:
+  <code style="font-size:0.7em;display:block;margin:0.5em auto;width:max-content;max-width:100%;">&lt;?php if (!isset($_SESSION['profil']) ) {$_SESSION['pageRequest'] = $_SERVER['REQUEST_URI'] ; header("Location: /core/admin/");} ?></code>. Vous pouvez editer tout ce qui se trouve sous cette ligne et y placer vos scripts et contenus.</p>
+  
   <h3>Traitement par lot de nouveaux V.I.P.</h3>
   <p>Le traitement par lot s'effectue sur la structure d'un fichier au format CSV, ce type de fichier peut-être ouvert et éditer avec de nombreux éditeurs de textes ou de feuille de calcul ou éditer en direct dans le plugin. Les 2 programmes plus connus du grand publics sont Excel(MS) et OpenOffice calc.</p>
   
@@ -85,7 +93,7 @@
   <h3>résumé et info à propos de l'édition <i>'Ajout utilisateurs'</i></h3>
   <ol>
     <li>Conservez les entêtes de la première ligne,<code>Login; Name; Password; Email; Infos</code> cette ligne n'est pas enregistrée comme Utilisateur mais affiche les entêtes de votre tableau dans un éditeur ou vous rappelle la syntaxe à respecter dans un éditeur texte ou en ligne . </li>
-    <li>Il y a cinq champs séparés par un point virgule, ces champs vont créer les utilisateurs avec leur adresse mail et mot de passe respectif .Le champs Infos est optionnel</li>
+    <li>Il y a cinq champs séparés par un point virgule, ces champs vont créer les utilisateurs avec leur adresse mail et mot de passe respectif .<b>Les quatres premier champs sont obligatoire</b>, Le champ Infos est optionnel et peut-être omis.</li>
     <li> Le mot de passe sera crypté à l'enregistrement, si il est perdu par l'utilisateur et selon la configuration native de votre PluXml, son adresse mail <small>si valide</small> pourra lui servir à en créer un nouveau.</li>
     <li>L'enregistrement vérifie , la présence des 4 premiers champs obligatoires, les doublons et la validité de l’e-mail. Le plugin ne finalisera pas un traitement en lot si une ligne est incomplète ou comporte une erreur de syntaxe, un message vous indiquera l'erreur et le numéro de ligne où se trouve cette erreur pour la corrigé dans l'éditeur en ligne.</li>
     <li>Lorsque vous désactiver le Plugin, tous vos utilisateurs V.I.P., n'ayant plus d’accès privé réservé, voient leur compte désactivé afin de ne plus apparaitre dans la partie 'Comptes Utilisateurs' de l'administration. Si vous avez des pages statiques privées, elles seront aussi désactivées.</li>
