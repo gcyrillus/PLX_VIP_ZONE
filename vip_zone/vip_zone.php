@@ -352,7 +352,7 @@
 				$plugin = $plxMotor->plxPlugins->aPlugins['vip_zone']; 
 				$parameter = $plugin->getParam('privatize');
 				
-			if(($parameter =='catart') or ($parameter =='blog') ){ 
+			if( !isset($_SESSION['profil']) and $parameter =='catart' or $parameter =='blog' ){ 
 				$com['content'] = $plugin->getLang("L_HIDDEN_COMMENT");
 			}
 <?php
