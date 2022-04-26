@@ -4,6 +4,7 @@
 # Auteur : Gcyrillus aka Gc-Nomade
 # premiere version : Sept. 2021
 # Version :  1.08  / Oct. 2021
+# Maj : 26/04/2022 (desactivation de l'option GZIP de PluXml)
 # Dépot github : https://github.com/gcyrillus/PLX_VIP_ZONE
 # Options de configurations de Zone privatisée dans votre PluXml.
 # Aide Forum : https://forum.pluxml.org/discussion/7056/plugin-vip-zone-options-de-privatisation-de-votre-pluxml#latest
@@ -14,6 +15,7 @@
 
     class vip_zone extends plxPlugin {
         const HOOKS = array(
+			'IndexBegin',
             'AdminPrepend',
 			'AdminAuthPrepend',
 			'AdminAuthTop',
@@ -87,7 +89,15 @@
 				$reactivateVipStatics->asXml(PLX_ROOT.PLX_CONFIG_PATH."statiques.xml");		
 		}
 
-#HOOKS		
+#HOOKS
+        // désactive  la compression gzip 
+        public function  IndexBegin() {
+            echo self::BEGIN_CODE;
+?>
+        $plxMotor->aConf['gzip'] ='0';
+<?php
+            echo self::END_CODE;            
+        }		
 		
 		#ajout constante profil VIP
 		public function AdminPrepend() {
