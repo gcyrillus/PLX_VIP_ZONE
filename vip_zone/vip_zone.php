@@ -5,6 +5,7 @@
 # premiere version : Sept. 2021
 # Version :  1.08  / Oct. 2021
 # Maj : 26/04/2022 (desactivation de l'option GZIP de PluXml)
+# Maj : 06/07/2022 (ajout de PLX_ROOT dans la redirection, installationPluXml dans un sous-dossier )
 # Dépot github : https://github.com/gcyrillus/PLX_VIP_ZONE
 # Options de configurations de Zone privatisée dans votre PluXml.
 # Aide Forum : https://forum.pluxml.org/discussion/7056/plugin-vip-zone-options-de-privatisation-de-votre-pluxml#latest
