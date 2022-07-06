@@ -15,18 +15,17 @@
 
     class vip_zone extends plxPlugin {
         const HOOKS = array(
-			'IndexBegin',
+	    'IndexBegin',
             'AdminPrepend',
-			'AdminAuthPrepend',
-			'AdminAuthTop',
+	    'AdminAuthPrepend',
+	    'AdminAuthTop',
             'AdminTopEndHead',
             'AdminUsersTop',
-			'ThemeEndHead',
-			'ThemeEndBody',
-			'plxShowStaticListEnd',
-			'plxMotorParseArticle',
-			'plxMotorParseCommentaire',
-
+	    'ThemeEndHead',
+	    'ThemeEndBody',
+	    'plxShowStaticListEnd',
+	    'plxMotorParseArticle',
+	    'plxMotorParseCommentaire',
         );
         const BEGIN_CODE = '<?php' . PHP_EOL;
         const END_CODE = PHP_EOL . '?>';
@@ -103,7 +102,8 @@
 		public function AdminPrepend() {
 			echo self::BEGIN_CODE;
 ?>
-         const PROFIL_VISITOR = 5; 					
+         const PROFIL_VISITOR = 5;	
+	 if(isset($_SESSION['profil']) and $_SESSION['profil'] === '5')  { header("location: ".$_SESSION['pageRequest']);}						
 <?php
             echo self::END_CODE;
         }
@@ -206,21 +206,21 @@
 		  if($parameter =="catart") {
 		        if (!isset($_SESSION['profil']) && (($plxMotor->mode === 'categorie' ) || ($plxMotor->mode === 'article' ))) {
 					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
-					header("Location: /core/admin/");
+					header("Location: '.PLX_ROOT.'/core/admin/");
 					exit;
 				}
 		}
 		  else if ($parameter =="static") {
 				if (!isset($_SESSION['profil']) && ($plxMotor->mode === 'static' )) {
 					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
-					header("Location: /core/admin/");
+					header("Location: '.PLX_ROOT.'/core/admin/");
 					exit;
 				}
 		}	
 		  else if ($parameter =="blog") {
 				if (!isset($_SESSION['profil']) && (($plxMotor->mode === 'home' ))) {
 					$_SESSION['pageRequest']=$_SERVER['REQUEST_URI'];
-					header("Location: /core/admin/");
+					header("Location: '.PLX_ROOT.'/core/admin/");
 					exit;
 				}
 		}
