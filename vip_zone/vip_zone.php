@@ -207,21 +207,21 @@
 		  if($parameter =="catart") {
 		        if (!isset($_SESSION['profil']) && (($plxMotor->mode === 'categorie' ) || ($plxMotor->mode === 'article' ))) {
 					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
-					header("Location: '.PLX_ROOT.'/core/admin/");
+					header("Location: ".PLX_ROOT."/core/admin/");
 					exit;
 				}
 		}
 		  else if ($parameter =="static") {
 				if (!isset($_SESSION['profil']) && ($plxMotor->mode === 'static' )) {
 					$_SESSION['pageRequest']= $_SERVER['REQUEST_URI'];
-					header("Location: '.PLX_ROOT.'/core/admin/");
+					header("Location: ".PLX_ROOT."/core/admin/");
 					exit;
 				}
 		}	
 		  else if ($parameter =="blog") {
 				if (!isset($_SESSION['profil']) && (($plxMotor->mode === 'home' ))) {
 					$_SESSION['pageRequest']=$_SERVER['REQUEST_URI'];
-					header("Location: '.PLX_ROOT.'/core/admin/");
+					header("Location: ".PLX_ROOT."/core/admin/");
 					exit;
 				}
 		}
