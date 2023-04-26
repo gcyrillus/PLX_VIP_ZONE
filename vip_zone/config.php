@@ -3,7 +3,7 @@
 # Fichier configuration du Plugin VIP_ZONE pour   PluXml (Cette version est incompatible avec les versions 6 et + de PluXml)
 # Auteur : Gcyrillus aka Gc-Nomade
 # premiere version : Sept. 2021
-# Version :  1.08  / Oct. 2021
+# Version :  2.0.2 / Avr 2024
 # Dépot github : https://github.com/gcyrillus/PLX_VIP_ZONE
 # Options de configurations de Zone privatisée dans votre PluXml.
 # Aide Forum : https://forum.pluxml.org/discussion/7056/plugin-vip-zone-options-de-privatisation-de-votre-pluxml#latest
