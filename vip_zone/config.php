@@ -225,7 +225,7 @@ function addVipStatic(){
 					$element = $element.'\n';	
 					
 					
-					$content="<?php if (!isset(\$_SESSION['profil']) ) {\$_SESSION['pageRequest'] = \$_SERVER['REQUEST_URI'] ; header(\"Location: /core/admin/\");} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");
+					$content="<?php if (!isset(\$_SESSION['profil']) ) {\$_SESSION['pageRequest'] = \$_SERVER['REQUEST_URI'] ; header(\"Location: /core/admin/\");die;} ?>\n\n ".$plxMotor->plxPlugins->aPlugins['vip_zone']->getLang("L_NOT_FIRST_LINE");
 					
 					if (!file_exists(PLX_ROOT.'data/statiques/'.$newVipStatic.'.php')) {
 						$open = fopen(PLX_ROOT.'data/statiques/'.str_pad($max, 3,'0', STR_PAD_LEFT).'.'.$_POST["newVipStatic"].'.php', 'w') ;
