@@ -51,4 +51,3 @@ $LANG = array (
 		'L_HIDDEN_ARTICLE_BLOG'					=>'<p class="red alert xy-center">Vous devez être connecté au <b>blog</b><br>pour visualiser ce contenu.</p>',
 		'L_HIDDEN_COMMENT'						=>'<p class="orange alert">Vous devez être connecté pour visualiser ce commentaire.</p>'
 );
-?>		
