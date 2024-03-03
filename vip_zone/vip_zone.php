@@ -31,6 +31,7 @@
         );
         const BEGIN_CODE = '<?php' . PHP_EOL;
         const END_CODE = PHP_EOL . '?>';
+		public $links='';
 		
         public function __construct($default_lang) {
 			# appel du constructeur de la classe plxPlugin (obligatoire)
