@@ -120,7 +120,7 @@ form {
  color: #fff;
 }
 #form_plugins td.wrap {
- white-space: pre-wrap;
+ 
 }
 .grid-center form {
  min-width: 360px;
@@ -135,7 +135,7 @@ form {
  max-width:40vw;
 }
 label.gridx2 {
-	max-width:max-content;
+  max-width:max-content;
   margin:auto;
   width:auto;
 }
