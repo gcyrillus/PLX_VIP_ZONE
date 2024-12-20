@@ -1,0 +1,161 @@
+.grid-center {
+ display: grid;
+ gap: 0.5em;
+ justify-content: center;
+}
+.grid-center legend:first-line,
+.grid-center caption {
+ text-transform: uppercase;
+ color:blue;
+}
+.grid-center legend,
+caption {
+ background: ivory;
+ font-family: courier, monospace;
+ font-size: 1.3rem;
+ white-space:wrap;
+ color:inherit;
+ box-shadow:1px 1px 2px gray;
+ border-radius:3px;
+ padding:0 2px;
+}
+.grid-center caption {
+ width:max-content;
+ transform:translate(1em,0.6em)
+}
+code {
+ background:#f7f7b4;
+ padding: 0 0.2em;
+ color:darkgreen
+}
+.gridx2 {
+ display: grid;
+ grid-template-columns: repeat(2, auto);
+ align-items: center;
+ gap: 0.5em;
+ max-width:80%;
+}
+option[disabled] {
+ background: #FBE8D9;
+ font-size:0.8em;
+}
+.gridx2 p.alert.red {
+ width: max-content;
+ max-width: 80%;
+}
+.gridx2 p.alert.red:empty {
+ visibility: hidden;
+}
+.span2col {
+ grid-column:1/-1;
+}
+.span2col table {
+ border: solid 1px lightgray;
+ display:table;
+ table-layout:fixed;
+ margin:auto;
+ width:90%;
+}
+.vip-edit-zone form:first-of-type {
+ background:url(http://p587.gc/plugins/vip_zone/icon.png) top 2.2em left 0.7em no-repeat
+}
+.span2col th {
+ text-align:right;
+ padding:0.75em 0.2em;
+}
+.span2col td {
+ border-left:solid 1px lightgray;
+ text-align:center;
+}
+.span2col td p {
+ min-width:100%;
+}
+.visitorUser form {
+ display: grid;
+ gap: 0.25em;
+}
+.visitorUser textarea {
+ width: 100%;
+ background: linear-gradient(to bottom,#dee 0 1.5em,gray 1.5em 1.55em,transparent 1.55em),repeating-linear-gradient(to bottom, transparent 0 1.4em, lightgray 1.5em);
+ word-spacing: 0.5em;
+ line-height: 1.5em;
+}
+.visitorUser [type="submit"] {
+ margin: auto;
+ display: block;
+}
+form {
+ margin: 0.5em 0;
+}
+[name="blobupload"] {
+ background: #0291db;
+}
+.grid-center form fieldset {
+ all: revert;
+}
+.row1-2col {
+ grid-row: 1;
+ grid-column: 1/-1;
+}
+.visitorUser :is(.CodeMirror) {
+ height: auto;
+ background: #def;
+}
+.visitorUser :is(.CodeMirror .CodeMirror-code > :first-child pre) {
+ background: #f7f7f7;
+ font-weight: bold;
+}
+.visitorUser button:before {
+ font-family: "Font Awesome 5 Free";
+ content: "\f6dd";
+ font-weight: bold;
+ color: gold;
+ font-size: 2rem;
+ padding-right: 0.5em;
+ display: inline-block;
+}
+#form_plugins span[data-scope=""],
+#plugins-table tbody tr[data-scope=""] td.wrap strong:first-of-type {
+ background: linear-gradient(45deg, #43b0f9 50%, lightgreen 50%);
+ color: #fff;
+}
+#form_plugins td.wrap {
+ 
+}
+.grid-center form {
+ min-width: 360px;
+}
+.vip-edit-zone form:first-of-type label {
+ padding-left:3em;
+}
+.grid-center label {
+ font-weight: bold;
+ text-align: right;
+ width:16em;
+ max-width:40vw;
+}
+label.gridx2 {
+  max-width:max-content;
+  margin:auto;
+  width:auto;
+}
+.grid-center button {
+ width: 16em;
+ height: auto;
+}
+.grid-center input:not([name="resetToTop"]) {
+ min-width: 16em;
+}
+[name="resetToTop"] {
+ width:max-content;
+}
+.x2 {
+ grid-template-columns: repeat(auto-fill, minmax(20em, 36em));
+ align-items:start;
+}
+.vip-edit-zone {
+ grid-row: 1/4;
+ display: grid;
+ gap:3.3rem;
+ margin-bottom:3.3rem;
+}
